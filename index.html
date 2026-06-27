@@ -1,0 +1,2953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C Programming — The Complete Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --red: #C41E3A;
+    --red-dark: #8B0000;
+    --red-light: #E85D75;
+    --black: #0D0D0D;
+    --black-light: #1A1A1A;
+    --black-mid: #2A2A2A;
+    --gold: #D4AF37;
+    --gold-light: #F0D060;
+    --gold-dim: #A08520;
+    --white: #F5F0E8;
+    --white-dim: #D8D0C0;
+    --code-bg: #111111;
+    --code-border: #333333;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) var(--black);
+  }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Fira Code', monospace;
+    overflow-x: hidden;
+  }
+
+  /* Navigation */
+  .nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(13,13,13,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--gold-dim);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-bar::-webkit-scrollbar { display: none; }
+
+  .nav-bar .logo {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--gold);
+    margin-right: 16px;
+    white-space: nowrap;
+    text-shadow: 0 0 20px rgba(212,175,55,0.4);
+  }
+
+  .nav-link {
+    font-size: 11px;
+    color: var(--white-dim);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  .nav-link:hover {
+    color: var(--gold);
+    border-color: var(--gold-dim);
+    background: rgba(212,175,55,0.08);
+  }
+
+  /* Pages */
+  .page {
+    min-height: 100vh;
+    padding: 80px 24px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .page-number {
+    position: absolute;
+    bottom: 16px;
+    right: 24px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    color: var(--gold-dim);
+    opacity: 0.5;
+  }
+
+  /* Page backgrounds */
+  .page-dark { background: var(--black); }
+  .page-light { background: var(--white); color: var(--black); }
+  .page-red { background: var(--red-dark); }
+  .page-black { background: #050505; }
+
+  /* Decorative elements */
+  .deco-line {
+    position: absolute;
+    background: var(--gold);
+    opacity: 0.08;
+  }
+  .deco-line.h { height: 1px; left: 0; right: 0; }
+  .deco-line.v { width: 1px; top: 0; bottom: 0; }
+
+  .corner-deco {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-color: var(--gold);
+    opacity: 0.2;
+  }
+  .corner-deco.tl { top: 20px; left: 20px; border-top: 2px solid; border-left: 2px solid; }
+  .corner-deco.tr { top: 20px; right: 20px; border-top: 2px solid; border-right: 2px solid; }
+  .corner-deco.bl { bottom: 20px; left: 20px; border-bottom: 2px solid; border-left: 2px solid; }
+  .corner-deco.br { bottom: 20px; right: 20px; border-bottom: 2px solid; border-right: 2px solid; }
+
+  /* Page Title */
+  .page-title {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: clamp(36px, 6vw, 64px);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+
+  .page-title .gold { color: var(--gold); }
+  .page-title .red { color: var(--red); }
+
+  .page-subtitle {
+    font-size: 13px;
+    color: var(--gold-dim);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+
+  .page-light .page-subtitle { color: var(--red-dark); }
+
+  .divider {
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    margin-bottom: 32px;
+    max-width: 300px;
+  }
+  .page-light .divider { background: linear-gradient(90deg, var(--red), transparent); }
+
+  /* Section headers */
+  .section-head {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin: 28px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--gold-dim);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-head i { font-size: 16px; }
+
+  .page-light .section-head { color: var(--red-dark); border-bottom-color: var(--red); }
+
+  /* Code blocks */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 10px 0 16px;
+    font-size: 13px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    overflow-x: auto;
+    position: relative;
+    border-left: 3px solid var(--gold-dim);
+  }
+  .page-light .code-block {
+    background: #1a1a1a;
+    color: var(--white);
+    border-left-color: var(--red);
+  }
+
+  .code-block .kw { color: var(--red-light); font-weight: 600; }
+  .code-block .fn { color: var(--gold-light); }
+  .code-block .str { color: #98C379; }
+  .code-block .num { color: #D19A66; }
+  .code-block .cm { color: #5C6370; font-style: italic; }
+  .code-block .pp { color: #C678DD; }
+  .code-block .type { color: #56B6C2; }
+  .code-block .op { color: var(--red-light); }
+
+  /* Tables */
+  .ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 20px;
+    font-size: 13px;
+  }
+  .ref-table th {
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 11px;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  .page-light .ref-table th {
+    background: var(--red-dark);
+    color: var(--white);
+  }
+  .ref-table td {
+    padding: 8px 14px;
+    border-bottom: 1px solid rgba(212,175,55,0.1);
+    vertical-align: top;
+  }
+  .page-light .ref-table td { border-bottom-color: rgba(13,13,13,0.1); }
+  .ref-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .page-light .ref-table tr:nth-child(even) td { background: rgba(13,13,13,0.03); }
+  .ref-table code {
+    background: rgba(212,175,55,0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: var(--gold-light);
+  }
+  .page-light .ref-table code {
+    background: rgba(196,30,58,0.1);
+    color: var(--red-dark);
+  }
+
+  /* Grid layouts */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .nav-link { font-size: 10px; padding: 4px 8px; }
+  }
+
+  /* Info cards */
+  .info-card {
+    background: var(--black-light);
+    border: 1px solid var(--code-border);
+    border-radius: 8px;
+    padding: 16px;
+    border-top: 3px solid var(--gold);
+  }
+  .page-light .info-card {
+    background: #fff;
+    border-color: #ddd;
+    border-top-color: var(--red);
+  }
+  .info-card h4 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    color: var(--gold);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .page-light .info-card h4 { color: var(--red-dark); }
+
+  /* Inline code */
+  inline-code, ic {
+    background: rgba(212,175,55,0.12);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: var(--gold-light);
+    font-family: 'Fira Code', monospace;
+  }
+  .page-light ic {
+    background: rgba(196,30,58,0.1);
+    color: var(--red-dark);
+  }
+
+  /* Note boxes */
+  .note-box {
+    background: rgba(212,175,55,0.06);
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .note-box::before {
+    content: "NOTE";
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-right: 8px;
+    font-size: 11px;
+  }
+  .page-light .note-box {
+    background: rgba(196,30,58,0.05);
+    border-color: var(--red);
+  }
+  .page-light .note-box::before { color: var(--red-dark); }
+
+  /* Warning box */
+  .warn-box {
+    background: rgba(196,30,58,0.08);
+    border: 1px solid var(--red);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .warn-box::before {
+    content: "WARNING";
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    color: var(--red);
+    letter-spacing: 2px;
+    margin-right: 8px;
+    font-size: 11px;
+  }
+
+  /* Cover page special */
+  .cover-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(196,30,58,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 30%, rgba(212,175,55,0.1) 0%, transparent 50%),
+      var(--black);
+  }
+
+  .cover-title {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: clamp(72px, 14vw, 160px);
+    color: var(--white);
+    line-height: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+  }
+  .cover-title .c-letter {
+    color: var(--gold);
+    text-shadow: 0 0 60px rgba(212,175,55,0.5), 0 0 120px rgba(212,175,55,0.2);
+  }
+
+  .cover-sub {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300;
+    font-size: clamp(14px, 2.5vw, 24px);
+    letter-spacing: 12px;
+    text-transform: uppercase;
+    color: var(--red-light);
+    margin-top: 20px;
+  }
+
+  .cover-line {
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--red));
+    margin: 30px 0;
+  }
+
+  .cover-desc {
+    font-size: 13px;
+    color: var(--white-dim);
+    line-height: 1.8;
+    max-width: 500px;
+    letter-spacing: 1px;
+  }
+
+  /* Floating particles on cover */
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: floatParticle 8s ease-in-out infinite;
+  }
+  @keyframes floatParticle {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+    50% { transform: translateY(-30px) scale(1.2); opacity: 0.6; }
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  .scroll-indicator span {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(10px); }
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Oswald', sans-serif;
+  }
+  .badge-red { background: var(--red); color: var(--white); }
+  .badge-gold { background: var(--gold); color: var(--black); }
+  .badge-dark { background: var(--black); color: var(--gold); }
+
+  /* Tooltip-style labels */
+  .label-tag {
+    font-size: 10px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: 'Oswald', sans-serif;
+  }
+
+  /* TOC */
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(212,175,55,0.1);
+    text-decoration: none;
+    color: var(--white);
+    transition: all 0.2s;
+  }
+  .toc-item:hover { padding-left: 10px; color: var(--gold); }
+  .toc-num {
+    font-family: 'Oswald', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold);
+    min-width: 50px;
+  }
+  .toc-text {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Syntax diagram */
+  .syntax-box {
+    background: rgba(212,175,55,0.04);
+    border: 1px dashed var(--gold-dim);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 8px 0 14px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+  .syntax-box .syn-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    color: var(--red-light);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .page-light .syntax-box {
+    background: rgba(196,30,58,0.04);
+    border-color: var(--red);
+  }
+  .page-light .syntax-box .syn-label { color: var(--red-dark); }
+
+  /* Comparison layout */
+  .compare-box {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    align-items: stretch;
+    margin: 10px 0 16px;
+  }
+  .compare-side {
+    padding: 14px;
+    font-size: 13px;
+  }
+  .compare-left { background: rgba(196,30,58,0.06); border-radius: 6px 0 0 6px; }
+  .compare-right { background: rgba(212,175,55,0.06); border-radius: 0 6px 6px 0; }
+  .compare-mid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--black-mid);
+    padding: 0 12px;
+    font-size: 18px;
+    color: var(--gold);
+  }
+
+  p { font-size: 13px; line-height: 1.7; margin-bottom: 10px; }
+
+  /* Print styles */
+  @media print {
+    .nav-bar { display: none; }
+    .page { page-break-after: always; min-height: auto; padding: 40px 20px; }
+  }
+
+  /* Glow dot animation */
+  .glow-dot {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 8px var(--gold);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .text-red { color: var(--red); }
+  .text-gold { color: var(--gold); }
+  .text-dim { color: var(--white-dim); }
+
+  /* Animated border on cover */
+  .anim-border {
+    position: absolute;
+    inset: 16px;
+    border: 1px solid rgba(212,175,55,0.15);
+    pointer-events: none;
+  }
+  .anim-border::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 80px;
+    height: 2px;
+    background: var(--gold);
+    animation: borderSlide 4s linear infinite;
+  }
+  @keyframes borderSlide {
+    0% { left: 0; }
+    50% { left: calc(100% - 80px); }
+    100% { left: 0; }
+  }
+
+  .brand-chip {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid rgba(212,175,55,0.35);
+    border-radius: 8px;
+    background: rgba(13,13,13,0.55);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 25px rgba(0,0,0,0.18);
+  }
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--black);
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  }
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.05;
+  }
+  .brand-text strong {
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 1px;
+    font-size: 13px;
+    color: var(--white);
+    text-transform: uppercase;
+  }
+  .brand-text span {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+  }
+  .nav-logo-wrap {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-right: 10px;
+    white-space: nowrap;
+  }
+  .nav-logo-wrap .logo {
+    margin-right: 0;
+  }
+
+</style>
+</head>
+<body>
+
+
+<!-- Navigation -->
+<nav class="nav-bar" role="navigation" aria-label="Page navigation">
+  <div class="nav-logo-wrap">
+    <div class="logo"><i class="fas fa-code"></i> C Ref</div>
+    <div class="brand-text" style="min-width:max-content;">
+      <strong>AMIT Learning</strong>
+      <span>Training Edition</span>
+    </div>
+  </div>
+  <a href="#page0" class="nav-link">Cover</a>
+  <a href="#page1" class="nav-link">Basics</a>
+  <a href="#page2" class="nav-link">Comments</a>
+  <a href="#page3" class="nav-link">Data Types</a>
+  <a href="#page4" class="nav-link">Modifiers</a>
+  <a href="#page5" class="nav-link">Variables</a>
+  <a href="#page6" class="nav-link">Operators</a>
+  <a href="#page7" class="nav-link">printf/scanf</a>
+  <a href="#page8" class="nav-link">Branching</a>
+  <a href="#page9" class="nav-link">Loops</a>
+  <a href="#page10" class="nav-link">Arrays/Strings</a>
+  <a href="#page11" class="nav-link">Functions</a>
+  <a href="#page12" class="nav-link">Recursion</a>
+  <a href="#page13" class="nav-link">Structs</a>
+  <a href="#page14" class="nav-link">Enums/Unions</a>
+  <a href="#page15" class="nav-link">Preprocessor</a>
+  <a href="#page16" class="nav-link">Pointers</a>
+  <a href="#page17" class="nav-link">Ptr Safety</a>
+  <a href="#page18" class="nav-link">Memory</a>
+  <a href="#page19" class="nav-link">Adv. Pointers</a>
+  <a href="#page20" class="nav-link">Files I</a>
+  <a href="#page21" class="nav-link">Files II</a>
+  <a href="#page22" class="nav-link">Logging</a>
+  <a href="#page23" class="nav-link">Debug Tools</a>
+  <a href="#page24" class="nav-link">Quick Ref</a>
+</nav>
+<!-- PAGE 0: COVER -->
+<section id="page0" class="page page-dark" style="display:flex;align-items:center;justify-content:center;">
+  <div class="cover-bg"></div>
+  <div class="brand-chip"><div class="brand-mark">A</div><div class="brand-text"><strong>AMIT Learning</strong><span>Course Handbook</span></div></div>
+  <div class="anim-border"></div>
+  <!-- Decorative particles -->
+  <div class="particle" style="width:4px;height:4px;background:var(--gold);top:15%;left:10%;animation-delay:0s;"></div>
+  <div class="particle" style="width:3px;height:3px;background:var(--red);top:25%;right:15%;animation-delay:1s;"></div>
+  <div class="particle" style="width:5px;height:5px;background:var(--gold);bottom:30%;left:20%;animation-delay:2s;"></div>
+  <div class="particle" style="width:3px;height:3px;background:var(--red-light);top:60%;right:25%;animation-delay:3s;"></div>
+  <div class="particle" style="width:4px;height:4px;background:var(--gold);bottom:20%;right:10%;animation-delay:1.5s;"></div>
+  <div class="particle" style="width:2px;height:2px;background:var(--red);top:40%;left:5%;animation-delay:4s;"></div>
+
+  <div style="position:relative;z-index:2;text-align:center;">
+    <div class="cover-title">
+      <span class="c-letter">C</span>
+    </div>
+    <div class="cover-sub">Programming Language</div>
+    <div class="cover-line" style="margin:30px auto;"></div>
+    <div class="cover-desc" style="margin:0 auto;text-align:center;">
+      The Complete Cheat Sheet Booklet<br>
+      Every keyword, every syntax, every rule — condensed into one reference.<br><br>
+      <span style="color:var(--gold);">24 Topics &middot; 25 Pages &middot; 1 Language</span>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <i class="fas fa-chevron-down" style="color:var(--gold);"></i>
+  </div>
+
+  <div class="corner-deco tl"></div>
+  <div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div>
+  <div class="corner-deco br"></div>
+  <div class="page-number">i</div>
+</section>
+<!-- PAGE 1: PROGRAM BASICS -->
+<section id="page1" class="page page-light">
+  <div class="page-inner">
+    <div class="page-title"><span class="red">Program</span> Basics</div>
+    <div class="page-subtitle">source file &middot; main &middot; statements &middot; blocks</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-play"></i> Your First C Program</div>
+    <div class="code-block">
+<span class="pp">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="type">int</span> <span class="fn">main</span>(<span class="kw">void</span>) {
+    <span class="fn">printf</span>(<span class="str">"Hello, AMIT!\n"</span>);
+    <span class="kw">return</span> <span class="num">0</span>;
+}
+    </div>
+
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>#include &lt;stdio.h&gt;</h4>
+        <p>Includes declarations for standard input/output features such as <ic>printf</ic>. The Preprocessor section explains headers in depth later.</p>
+      </div>
+      <div class="info-card">
+        <h4>main(void)</h4>
+        <p>The program begins at <ic>main</ic>. Writing <ic>void</ic> explicitly means the function takes no parameters.</p>
+      </div>
+      <div class="info-card">
+        <h4>Statements</h4>
+        <p>Most C statements end with a semicolon, such as <ic>return 0;</ic>. A missing semicolon is a common early compiler error.</p>
+      </div>
+      <div class="info-card">
+        <h4>Blocks</h4>
+        <p>Curly braces <ic>{ }</ic> group statements into a block. Blocks define the body of functions, conditions, and loops.</p>
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-gears"></i> Compile, Run, Read the Result</div>
+    <div class="code-block">
+<span class="cm">// Typical desktop GCC command</span>
+gcc -std=c11 -Wall -Wextra hello.c -o hello
+
+<span class="cm">// Run the generated program: ./hello on macOS/Linux, or hello.exe on Windows</span>
+./hello
+    </div>
+    <div class="note-box">
+      Start by reading compiler messages from top to bottom. The first error is often the root cause; later errors may only be consequences of it.
+    </div>
+  </div>
+  <div class="page-number">1</div>
+</section>
+
+<!-- PAGE 2: COMMENTS & ESCAPE SEQUENCES -->
+<section id="page2" class="page page-light">
+  <div class="page-inner">
+    <div class="page-title"><span class="red">Comments</span> &amp; <span class="red">Escapes</span></div>
+    <div class="page-subtitle">documentation &middot; string literals &middot; special characters</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-comment-dots"></i> Comments</div>
+    <div class="grid-2">
+      <div class="code-block">
+<span class="cm">// Single-line comment</span>
+
+<span class="cm">/* Multi-line
+   comment */</span>
+
+<span class="cm">/* Comments cannot be nested */</span>
+      </div>
+      <div class="note-box">
+        Comments are removed before compilation. Use them to explain intent, assumptions, edge cases, or tricky logic — not every obvious line.
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-font"></i> Character &amp; String Literals</div>
+    <div class="code-block">
+<span class="type">char</span> ch = <span class="str">'A'</span>;
+<span class="type">char</span> newline = <span class="str">'\n'</span>;
+<span class="type">char</span> name[] = <span class="str">"AMIT"</span>;
+<span class="type">char</span> quote[] = <span class="str">"She said: \"Hello\""</span>;
+      </div>
+
+    <div class="section-head"><i class="fas fa-right-from-bracket"></i> Escape Sequences</div>
+    <table class="ref-table">
+      <tr><th>Seq</th><th>Meaning</th><th>Seq</th><th>Meaning</th></tr>
+      <tr><td><code>\n</code></td><td>Newline</td><td><code>\t</code></td><td>Horizontal tab</td></tr>
+      <tr><td><code>\\</code></td><td>Backslash</td><td><code>\'</code></td><td>Single quote</td></tr>
+      <tr><td><code>\"</code></td><td>Double quote</td><td><code>\?</code></td><td>Question mark</td></tr>
+      <tr><td><code>\r</code></td><td>Carriage return</td><td><code>\b</code></td><td>Backspace</td></tr>
+      <tr><td><code>\f</code></td><td>Form feed</td><td><code>\v</code></td><td>Vertical tab</td></tr>
+      <tr><td><code>\0</code></td><td>Null character</td><td><code>\xHH</code></td><td>Hex value</td></tr>
+      <tr><td><code>\ooo</code></td><td>Octal value</td><td><code>\a</code></td><td>Alert/bell</td></tr>
+    </table>
+
+    <div class="section-head"><i class="fas fa-circle-info"></i> Good Practice</div>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>Readable Comments</h4>
+        <p>Prefer short, precise comments near algorithms, assumptions, and non-obvious business rules.</p>
+      </div>
+      <div class="info-card">
+        <h4>Readable Strings</h4>
+        <p>Remember that string literals end with a hidden <ic>\0</ic>. That null terminator matters in arrays and standard library functions.</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-number">2</div>
+</section>
+<!-- PAGE 3: DATA TYPES -->
+<section id="page3" class="page page-dark">
+  <div class="page-inner">
+    <div class="page-title"><span class="gold">Data</span> Types</div>
+    <div class="page-subtitle">primitives &middot; ranges &middot; typical sizes</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-cubes"></i> Primary Data Types</div>
+    <table class="ref-table">
+      <tr><th>Type</th><th>Size (typical)</th><th>Range / Notes</th><th>Common Use</th></tr>
+      <tr><td><code>char</code></td><td>1 byte</td><td>May be signed or unsigned depending on implementation</td><td>Characters / small integers</td></tr>
+      <tr><td><code>signed char</code></td><td>1 byte</td><td>Typically -128 to 127 when a byte has 8 bits</td><td>Explicit signed small integers</td></tr>
+      <tr><td><code>unsigned char</code></td><td>1 byte</td><td>Typically 0 to 255 when a byte has 8 bits</td><td>Bytes / raw data</td></tr>
+      <tr><td><code>short</code></td><td>2 bytes</td><td>At least 16 bits</td><td>Smaller integer storage</td></tr>
+      <tr><td><code>int</code></td><td>4 bytes</td><td>At least 16 bits, usually 32</td><td>Default integer type</td></tr>
+      <tr><td><code>long</code></td><td>4 or 8 bytes</td><td>Platform dependent</td><td>Larger integer range</td></tr>
+      <tr><td><code>long long</code></td><td>8 bytes</td><td>At least 64 bits</td><td>Very large integers</td></tr>
+      <tr><td><code>float</code></td><td>4 bytes</td><td>About 6–9 significant digits</td><td>Single-precision floating point</td></tr>
+      <tr><td><code>double</code></td><td>8 bytes</td><td>About 15–18 significant digits</td><td>Default floating-point type</td></tr>
+      <tr><td><code>long double</code></td><td>Typically 10, 12, or 16 bytes</td><td>Extended precision, implementation dependent</td><td>Higher precision floating point</td></tr>
+      <tr><td><code>void</code></td><td>N/A</td><td>No value / no type</td><td>Functions or generic pointers</td></tr>
+    </table>
+
+    <div class="section-head"><i class="fas fa-ruler"></i> Size Notes</div>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>Portable Thinking</h4>
+        <p>C only guarantees minimum relationships such as <ic>sizeof(char) &lt;= sizeof(short) &lt;= sizeof(int) &lt;= sizeof(long)</ic>. Exact sizes depend on the platform.</p>
+      </div>
+      <div class="info-card">
+        <h4>Check at Runtime</h4>
+        <p>Use <ic>sizeof(type)</ic> and limits from headers like <ic>&lt;limits.h&gt;</ic> and <ic>&lt;float.h&gt;</ic> when you need exact information.</p>
+      </div>
+    </div>
+
+    <div class="code-block">
+<span class="fn">printf</span>(<span class="str">"int: %zu bytes\n"</span>, <span class="kw">sizeof</span>(<span class="type">int</span>));
+<span class="fn">printf</span>(<span class="str">"double: %zu bytes\n"</span>, <span class="kw">sizeof</span>(<span class="type">double</span>));
+<span class="fn">printf</span>(<span class="str">"long double: %zu bytes\n"</span>, <span class="kw">sizeof</span>(<span class="type">long double</span>));
+    </div>
+  </div>
+  <div class="page-number">3</div>
+</section>
+<!-- PAGE 4: TYPE MODIFIERS -->
+<section id="page4" class="page page-light">
+  <div class="page-inner">
+    <div class="page-title"><span class="red">Type</span> Modifiers</div>
+    <div class="page-subtitle">signed &middot; unsigned &middot; short &middot; long</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-sliders"></i> What Modifiers Do</div>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>Size Modifiers</h4>
+        <p><ic>short</ic> usually reduces storage and range.<br>
+        <ic>long</ic> increases range.<br>
+        <ic>long long</ic> provides at least 64-bit integer storage.</p>
+      </div>
+      <div class="info-card">
+        <h4>Sign Modifiers</h4>
+        <p><ic>signed</ic> allows negative and positive values.<br>
+        <ic>unsigned</ic> stores only non-negative values and increases positive range.</p>
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-table-cells"></i> Common Combinations</div>
+    <table class="ref-table">
+      <tr><th>Declaration</th><th>Meaning</th><th>Typical Use</th></tr>
+      <tr><td><code>unsigned int</code></td><td>Non-negative integer</td><td>Counters, sizes, bit patterns</td></tr>
+      <tr><td><code>short int</code></td><td>Smaller integer type</td><td>Compact storage when range is small</td></tr>
+      <tr><td><code>long int</code></td><td>Larger integer range</td><td>Longer-range integer values</td></tr>
+      <tr><td><code>unsigned long</code></td><td>Large non-negative integer</td><td>Flags, bitmasks, capacities</td></tr>
+      <tr><td><code>long long</code></td><td>Very large integer</td><td>Large IDs, big calculations</td></tr>
+      <tr><td><code>long double</code></td><td>Extended-precision floating point</td><td>Higher precision calculations</td></tr>
+    </table>
+
+    <div class="code-block">
+<span class="cm">// Valid combinations</span>
+<span class="type">unsigned char</span> uc = <span class="num">255</span>;
+<span class="type">signed short int</span> ssi = <span class="num">-32768</span>;
+<span class="type">unsigned long long</span> ull = <span class="num">18446744073709551615ULL</span>;
+<span class="type">long double</span> ld = <span class="num">3.14L</span>;
+
+<span class="cm">// int is implied when only a modifier is written</span>
+<span class="type">unsigned</span> x;  <span class="cm">// same as unsigned int</span>
+<span class="type">long</span> y;      <span class="cm">// same as long int</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-circle-exclamation"></i> Quick Warnings</div>
+    <div class="note-box">
+      Be careful when mixing <code>signed</code> and <code>unsigned</code> values in the same expression. C applies the usual arithmetic conversions, and the result may not be what beginners expect.
+    </div>
+  </div>
+  <div class="page-number">4</div>
+</section>
+<!-- PAGE 5: VARIABLES -->
+<section id="page5" class="page page-light">
+  <div class="page-inner">
+    <div class="page-title"><span class="red">Variables</span></div>
+    <div class="page-subtitle">declaration &middot; scope &middot; lifetime &middot; constants</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-database"></i> Declaration &amp; Initialization</div>
+    <div class="code-block">
+<span class="type">int</span> x;                    <span class="cm">// Uninitialized automatic object: do not read it before assigning a value</span>
+<span class="type">int</span> y = <span class="num">10</span>;              <span class="cm">// Declaration + initialization</span>
+<span class="type">int</span> a = <span class="num">1</span>, b = <span class="num">2</span>, c = <span class="num">3</span>;  <span class="cm">// Multiple in one line</span>
+<span class="type">int</span> d = <span class="num">5</span>;              <span class="cm">// Standard C initialization</span>
+
+<span class="cm">// Designated initializers (C99)</span>
+<span class="type">int</span> arr[<span class="num">5</span>] = { [<span class="num">2</span>] = <span class="num">7</span>, [<span class="num">4</span>] = <span class="num">9</span> }; <span class="cm">// [0,0,7,0,9]</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-layer-group"></i> Storage Classes</div>
+    <table class="ref-table">
+      <tr><th>Form</th><th>Scope</th><th>Storage Duration</th><th>Linkage</th><th>Initial State</th></tr>
+      <tr><td><code>auto int x;</code></td><td>Block</td><td>Automatic</td><td>None</td><td>Indeterminate until initialized</td></tr>
+      <tr><td><code>register int x;</code></td><td>Block</td><td>Automatic</td><td>None</td><td>Indeterminate until initialized</td></tr>
+      <tr><td><code>static int x;</code> inside a function</td><td>Block</td><td>Static</td><td>None</td><td>Zero-initialized if no initializer</td></tr>
+      <tr><td><code>static int x;</code> at file scope</td><td>File</td><td>Static</td><td>Internal</td><td>Zero-initialized if no initializer</td></tr>
+      <tr><td><code>extern int x;</code></td><td>Block or file</td><td>Static for the defined object</td><td>External</td><td>Depends on its separate definition</td></tr>
+    </table>
+
+    <div class="code-block">
+<span class="kw">void</span> <span class="fn">counter</span>(<span class="kw">void</span>) {
+    <span class="kw">static</span> <span class="type">int</span> count = <span class="num">0</span>;  <span class="cm">// Persists between calls</span>
+    count++;
+    <span class="fn">printf</span>(<span class="str">"%d\n"</span>, count);
+}
+<span class="cm">// counter(); counter(); counter(); → 1, 2, 3</span>
+
+<span class="kw">register</span> <span class="type">int</span> fast = <span class="num">0</span>;  <span class="cm">// Optimization hint; cannot apply &amp; to this object</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-shield-halved"></i> Constants &amp; Qualifiers</div>
+    <div class="code-block">
+<span class="kw">const</span> <span class="type">int</span> MAX = <span class="num">100</span>;        <span class="cm">// Can't modify after init</span>
+<span class="kw">const</span> <span class="type">int</span> *ptr1;              <span class="cm">// Pointer to const int (can't modify *ptr1)</span>
+<span class="type">int</span> * <span class="kw">const</span> ptr2 = &amp;x;        <span class="cm">// Const pointer (can't change ptr2)</span>
+<span class="kw">const</span> <span class="type">int</span> * <span class="kw">const</span> ptr3 = &amp;x;  <span class="cm">// Both const</span>
+
+<span class="kw">static const</span> <span class="type">double</span> PI = <span class="num">3.14159</span>; <span class="cm">// Read-only object with static storage duration</span>
+<span class="cm">// Macros and enum constants are introduced in later sections.</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-arrows-alt"></i> Volatile</div>
+    <div class="code-block">
+<span class="kw">volatile</span> <span class="type">int</span> flag = <span class="num">0</span>;
+<span class="cm">// Requests that accesses are treated as observable side effects.</span>
+<span class="cm">// Common for memory-mapped hardware registers and simple signal flags.</span>
+<span class="cm">// It does NOT make operations atomic or provide thread synchronization; use _Atomic or locks for threads.</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-compress-alt"></i> Scope Rules</div>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>Block Scope</h4>
+        <p>Variables declared inside <ic>{}</ic> exist only within that block. Inner blocks shadow outer variables with the same name.</p>
+      </div>
+      <div class="info-card">
+        <h4>File Scope</h4>
+        <p>Global variables declared outside all functions. Visible from declaration point to end of file. Marked <ic>static</ic> for internal linkage.</p>
+      </div>
+    </div>
+    <div class="code-block">
+<span class="type">int</span> g = <span class="num">10</span>;           <span class="cm">// File scope (global)</span>
+<span class="kw">void</span> <span class="fn">f</span>() {
+    <span class="type">int</span> g = <span class="num">20</span>;       <span class="cm">// Shadows global g</span>
+    {
+        <span class="type">int</span> g = <span class="num">30</span>;   <span class="cm">// Shadows both</span>
+        <span class="fn">printf</span>(<span class="str">"%d"</span>, g); <span class="cm">// 30</span>
+    }
+    <span class="fn">printf</span>(<span class="str">"%d"</span>, g);   <span class="cm">// 20</span>
+}
+    </div>
+  </div>
+  <div class="page-number">5</div>
+</section>
+<!-- PAGE 6: OPERATORS -->
+<section id="page6" class="page page-dark">
+  <div class="page-inner">
+    <div class="page-title"><span class="gold">Operators</span></div>
+    <div class="page-subtitle">arithmetic &middot; relational &middot; logical &middot; bitwise &middot; misc</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-calculator"></i> Arithmetic Operators</div>
+    <table class="ref-table">
+      <tr><th>Op</th><th>Name</th><th>Example</th><th>Result</th></tr>
+      <tr><td><code>+</code></td><td>Addition</td><td>5 + 3</td><td>8</td></tr>
+      <tr><td><code>-</code></td><td>Subtraction</td><td>5 - 3</td><td>2</td></tr>
+      <tr><td><code>*</code></td><td>Multiplication</td><td>5 * 3</td><td>15</td></tr>
+      <tr><td><code>/</code></td><td>Division</td><td>7 / 2</td><td>3 (int) or 3.5 (float)</td></tr>
+      <tr><td><code>%</code></td><td>Modulus</td><td>7 % 2</td><td>1</td></tr>
+      <tr><td><code>++</code></td><td>Increment</td><td>++x / x++</td><td>Pre/Post increment</td></tr>
+      <tr><td><code>--</code></td><td>Decrement</td><td>--x / x--</td><td>Pre/Post decrement</td></tr>
+    </table>
+
+    <div class="section-head"><i class="fas fa-not-equal"></i> Relational &amp; Logical</div>
+    <div class="grid-2">
+      <div>
+        <table class="ref-table">
+          <tr><th>Op</th><th>Meaning</th></tr>
+          <tr><td><code>==</code></td><td>Equal to</td></tr>
+          <tr><td><code>!=</code></td><td>Not equal</td></tr>
+          <tr><td><code>&lt;</code></td><td>Less than</td></tr>
+          <tr><td><code>&gt;</code></td><td>Greater than</td></tr>
+          <tr><td><code>&lt;=</code></td><td>Less or equal</td></tr>
+          <tr><td><code>&gt;=</code></td><td>Greater or equal</td></tr>
+        </table>
+      </div>
+      <div>
+        <table class="ref-table">
+          <tr><th>Op</th><th>Meaning</th></tr>
+          <tr><td><code>&&</code></td><td>Logical AND</td></tr>
+          <tr><td><code>||</code></td><td>Logical OR</td></tr>
+          <tr><td><code>!</code></td><td>Logical NOT</td></tr>
+        </table>
+        <div class="note-box">
+          <code>&&</code> and <code>||</code> short-circuit: left operand evaluated first, right only if needed.
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-microchip"></i> Bitwise Operators</div>
+    <table class="ref-table">
+      <tr><th>Op</th><th>Name</th><th>Example (8-bit)</th><th>Result</th></tr>
+      <tr><td><code>&</code></td><td>Bitwise AND</td><td>0x0C &amp; 0x0A</td><td>0x08</td></tr>
+      <tr><td><code>|</code></td><td>Bitwise OR</td><td>0x0C | 0x0A</td><td>0x0E</td></tr>
+      <tr><td><code>^</code></td><td>Bitwise XOR</td><td>0x0C ^ 0x0A</td><td>0x06</td></tr>
+      <tr><td><code>~</code></td><td>Bitwise NOT</td><td>~0x0F</td><td>0xF0 in an 8-bit view</td></tr>
+      <tr><td><code>&lt;&lt;</code></td><td>Left shift</td><td>1u &lt;&lt; 3</td><td>8 for this unsigned, in-range example</td></tr>
+      <tr><td><code>&gt;&gt;</code></td><td>Right shift</td><td>8u &gt;&gt; 2</td><td>2 for this unsigned example</td></tr>
+    </table>
+
+    <div class="note-box">
+      Shift operators are not a universal multiply/divide shortcut. Keep the shift count in range, prefer unsigned values for bit manipulation, and do not rely on signed negative or overflowing shifts for portable code.
+    </div>
+
+    <div class="section-head"><i class="fas fa-ellipsis"></i> Assignment &amp; Misc Operators</div>
+    <div class="code-block">
+<span class="cm">// Compound assignment</span>
+x <span class="op">+=</span> <span class="num">5</span>;   <span class="cm">// x = x + 5</span>
+x <span class="op">-=</span> <span class="num">3</span>;   <span class="cm">// x = x - 3</span>
+x <span class="op">*=</span> <span class="num">2</span>;   <span class="cm">// x = x * 2</span>
+x <span class="op">/=</span> <span class="num">4</span>;   <span class="cm">// x = x / 4</span>
+x <span class="op">%=</span> <span class="num">7</span>;   <span class="cm">// x = x % 7</span>
+x <span class="op">&=</span> <span class="num">0xF</span>;  <span class="cm">// x = x & 0xF</span>
+x <span class="op">|=</span> mask; <span class="cm">// x = x | mask</span>
+x <span class="op">^=</span> key;  <span class="cm">// x = x ^ key</span>
+x <span class="op">&lt;&lt;=</span> n;  <span class="cm">// x = x << n</span>
+x <span class="op">&gt;&gt;=</span> n;  <span class="cm">// x = x >> n</span>
+
+<span class="cm">// Ternary (conditional) operator</span>
+<span class="type">int</span> max = (a > b) <span class="op">?</span> a <span class="op">:</span> b;
+
+<span class="cm">// Comma operator</span>
+<span class="type">int</span> z = (<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>);  <span class="cm">// z = 3 (evaluates all, returns last)</span>
+
+<span class="cm">// sizeof operator</span>
+<span class="fn">printf</span>(<span class="str">"%zu"</span>, <span class="kw">sizeof</span>(<span class="type">int</span>));   <span class="cm">// 4 (typically)</span>
+<span class="fn">printf</span>(<span class="str">"%zu"</span>, <span class="kw">sizeof</span>(arr));   <span class="cm">// Total bytes of array</span>
+
+<span class="cm">// Address operators</span>
+<span class="type">int</span> x = <span class="num">42</span>;
+<span class="type">int</span> *p = <span class="op">&</span>x;    <span class="cm">// & = address-of</span>
+<span class="fn">printf</span>(<span class="str">"%d"</span>, <span class="op">*</span>p); <span class="cm">// * = dereference → 42</span>
+
+<span class="cm">// Member access</span>
+s.<span class="fn">member</span>   <span class="cm">// Dot operator for structs</span>
+ptr<span class="op">-></span><span class="fn">member</span> <span class="cm">// Arrow for pointer to struct</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-sort-amount-down"></i> Operator Precedence (High → Low)</div>
+    <table class="ref-table">
+      <tr><th>Precedence</th><th>Operators</th><th>Associativity</th></tr>
+      <tr><td>1 (highest)</td><td><code>() [] -> . ++(post) --(post)</code></td><td>Left to right</td></tr>
+      <tr><td>2</td><td><code>++(pre) --(pre) ! ~ + - * & (type) sizeof</code></td><td>Right to left</td></tr>
+      <tr><td>3</td><td><code>* / %</code></td><td>Left to right</td></tr>
+      <tr><td>4</td><td><code>+ -</code></td><td>Left to right</td></tr>
+      <tr><td>5</td><td><code><< >></code></td><td>Left to right</td></tr>
+      <tr><td>6</td><td><code>< <= > >=</code></td><td>Left to right</td></tr>
+      <tr><td>7</td><td><code>== !=</code></td><td>Left to right</td></tr>
+      <tr><td>8</td><td><code>&</code></td><td>Left to right</td></tr>
+      <tr><td>9</td><td><code>^</code></td><td>Left to right</td></tr>
+      <tr><td>10</td><td><code>|</code></td><td>Left to right</td></tr>
+      <tr><td>11</td><td><code>&&</code></td><td>Left to right</td></tr>
+      <tr><td>12</td><td><code>||</code></td><td>Left to right</td></tr>
+      <tr><td>13</td><td><code>?:</code></td><td>Right to left</td></tr>
+      <tr><td>14</td><td><code>= += -= *= /= %= &= |= ^= <<= >>=</code></td><td>Right to left</td></tr>
+      <tr><td>15 (lowest)</td><td><code>,</code></td><td>Left to right</td></tr>
+    </table>
+  </div>
+  <div class="page-number">6</div>
+</section>
+<!-- PAGE 7: FORMATTED I/O -->
+<section id="page7" class="page page-dark">
+  <div class="page-inner">
+    <div class="page-title"><span class="gold">Formatted</span> I/O</div>
+    <div class="page-subtitle">printf &middot; scanf &middot; flags &middot; width &middot; precision</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-terminal"></i> Core Functions</div>
+    <div class="grid-2">
+      <div class="syntax-box">
+        <span class="syn-label">printf</span>
+        <code>int printf(const char *format, ...);</code><br>
+        Prints formatted output and returns the number of characters printed.
+      </div>
+      <div class="syntax-box">
+        <span class="syn-label">scanf</span>
+        <code>int scanf(const char *format, ...);</code><br>
+        Reads formatted input and returns the number of successfully matched items.
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-sitemap"></i> Anatomy of a Format Specifier</div>
+    <div class="syntax-box">
+      <span class="syn-label">General Pattern</span>
+      <code>%[flags][width][.precision][length]specifier</code>
+    </div>
+    <div class="note-box">
+      Example: <code>%-10.2f</code> means left-aligned, width 10, precision 2, floating-point output.
+    </div>
+
+    <div class="section-head"><i class="fas fa-flag"></i> printf Flags</div>
+    <table class="ref-table">
+      <tr><th>Flag</th><th>Meaning</th><th>Example</th></tr>
+      <tr><td><code>-</code></td><td>Left-align within the field width</td><td><code>%-10d</code></td></tr>
+      <tr><td><code>+</code></td><td>Always show sign for numeric output</td><td><code>%+d</code></td></tr>
+      <tr><td><code>space</code></td><td>Prefix positive numbers with a space</td><td><code>% d</code></td></tr>
+      <tr><td><code>#</code></td><td>Alternate form</td><td><code>%#x</code>, <code>%#o</code>, <code>%#f</code></td></tr>
+      <tr><td><code>0</code></td><td>Zero-pad numeric output</td><td><code>%05d</code></td></tr>
+    </table>
+
+    <div class="section-head"><i class="fas fa-text-width"></i> Width &amp; Precision</div>
+    <div class="code-block">
+<span class="fn">printf</span>(<span class="str">"%10d\n"</span>, <span class="num">42</span>);      <span class="cm">// Right-aligned in width 10</span>
+<span class="fn">printf</span>(<span class="str">"%-10d|\n"</span>, <span class="num">42</span>);    <span class="cm">// Left-aligned in width 10</span>
+<span class="fn">printf</span>(<span class="str">"%05d\n"</span>, <span class="num">42</span>);      <span class="cm">// 00042</span>
+<span class="fn">printf</span>(<span class="str">"%.2f\n"</span>, <span class="num">3.14159</span>); <span class="cm">// 3.14</span>
+<span class="fn">printf</span>(<span class="str">"%8.2f\n"</span>, <span class="num">3.14159</span>); <span class="cm">// Width 8, precision 2</span>
+<span class="fn">printf</span>(<span class="str">"%.5s\n"</span>, <span class="str">"Programming"</span>); <span class="cm">// Prints only first 5 chars</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-arrows-left-right"></i> Length Modifiers</div>
+    <table class="ref-table">
+      <tr><th>Modifier</th><th>Typical Meaning</th><th>Example</th></tr>
+      <tr><td><code>hh</code></td><td><code>signed char</code> / <code>unsigned char</code></td><td><code>%hhd</code>, <code>%hhu</code></td></tr>
+      <tr><td><code>h</code></td><td><code>short</code> / <code>unsigned short</code></td><td><code>%hd</code>, <code>%hu</code></td></tr>
+      <tr><td><code>l</code></td><td><code>long</code> or <code>double*</code> in <code>scanf</code></td><td><code>%ld</code>, <code>%lf</code></td></tr>
+      <tr><td><code>ll</code></td><td><code>long long</code></td><td><code>%lld</code>, <code>%llu</code></td></tr>
+      <tr><td><code>L</code></td><td><code>long double</code></td><td><code>%Lf</code></td></tr>
+      <tr><td><code>z</code></td><td><code>size_t</code></td><td><code>%zu</code></td></tr>
+      <tr><td><code>t</code></td><td><code>ptrdiff_t</code></td><td><code>%td</code></td></tr>
+      <tr><td><code>j</code></td><td><code>intmax_t</code></td><td><code>%jd</code></td></tr>
+    </table>
+
+    <div class="section-head"><i class="fas fa-list"></i> Common Conversion Specifiers</div>
+    <table class="ref-table">
+      <tr><th>Specifier</th><th>Use For</th><th>Notes</th></tr>
+      <tr><td><code>%d</code> / <code>%i</code></td><td>Signed decimal integer</td><td><code>%i</code> in <code>scanf</code> can auto-detect base</td></tr>
+      <tr><td><code>%u</code></td><td>Unsigned integer</td><td>Base 10</td></tr>
+      <tr><td><code>%o</code></td><td>Unsigned octal</td><td>Base 8</td></tr>
+      <tr><td><code>%x</code> / <code>%X</code></td><td>Unsigned hexadecimal</td><td>Lowercase / uppercase letters</td></tr>
+      <tr><td><code>%f</code></td><td>Floating-point output</td><td>In <code>printf</code>, both <code>float</code> and <code>double</code> use <code>%f</code></td></tr>
+      <tr><td><code>%e</code> / <code>%E</code></td><td>Scientific notation</td><td>Exponential form</td></tr>
+      <tr><td><code>%g</code> / <code>%G</code></td><td>Shortest of <code>%f</code> or <code>%e</code></td><td>Auto-selection</td></tr>
+      <tr><td><code>%c</code></td><td>Single character</td><td>Reads or prints exactly one character</td></tr>
+      <tr><td><code>%s</code></td><td>String</td><td>Needs room for terminating null</td></tr>
+      <tr><td><code>%p</code></td><td>Pointer address</td><td>Use <code>(void*)ptr</code> with <code>printf</code></td></tr>
+      <tr><td><code>%%</code></td><td>Literal percent sign</td><td>No argument consumed</td></tr>
+    </table>
+
+    <div class="section-head"><i class="fas fa-keyboard"></i> scanf Rules &amp; Safe Examples</div>
+    <div class="code-block">
+<span class="type">int</span> age;
+<span class="type">double</span> salary;
+<span class="type">char</span> name[<span class="num">50</span>];
+<span class="type">char</span> line[<span class="num">100</span>];
+
+<span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;age);             <span class="cm">// & needed for scalar variables</span>
+<span class="fn">scanf</span>(<span class="str">"%lf"</span>, &amp;salary);         <span class="cm">// double uses %lf in scanf</span>
+<span class="fn">scanf</span>(<span class="str">"%49s"</span>, name);           <span class="cm">// no & for char array</span>
+<span class="fn">scanf</span>(<span class="str">"%99[^\n]"</span>, line);      <span class="cm">// read until newline, with width limit</span>
+
+<span class="cm">// Always check the return value</span>
+<span class="kw">if</span> (<span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;age) == <span class="num">1</span>) {
+    <span class="fn">printf</span>(<span class="str">"Age read successfully\n"</span>);
+}
+    </div>
+
+    <div class="warn-box">
+      In <code>scanf</code>, always limit input width for <code>%s</code> and scansets like <code>%[...]</code>. Also remember that whitespace in the format string usually skips whitespace in input.
+    </div>
+  </div>
+  <div class="page-number">7</div>
+</section>
+<!-- PAGE 8: CASTING & BRANCHING -->
+<section id="page8" class="page page-red">
+  <div class="page-inner">
+    <div class="page-title"><span class="gold">Casting</span> &amp; <span class="gold">Branching</span></div>
+    <div class="page-subtitle">type conversion &middot; if/else &middot; switch</div>
+    <div class="divider" style="background:linear-gradient(90deg, var(--gold), transparent);"></div>
+
+    <div class="section-head" style="border-bottom-color:rgba(212,175,55,0.3);"><i class="fas fa-exchange-alt"></i> Type Casting</div>
+
+    <div class="syntax-box" style="border-color:rgba(212,175,55,0.3);">
+      <span class="syn-label">Syntax</span>
+      <code>(type_name) expression</code>
+    </div>
+
+    <div class="code-block">
+<span class="cm">// Implicit conversions (automatic)</span>
+<span class="type">int</span> i = <span class="num">3</span>;
+<span class="type">float</span> f = i;          <span class="cm">// int → float: implicit conversion</span>
+<span class="type">double</span> d = f;         <span class="cm">// float → double: implicit conversion</span>
+
+<span class="cm">// Integer promotion example: char is promoted to int in this expression</span>
+<span class="type">char</span> small = <span class="num">10</span>;
+<span class="type">int</span> total = small + <span class="num">1</span>;
+
+<span class="cm">// Explicit casting (manual)</span>
+<span class="type">int</span> a = <span class="num">7</span>, b = <span class="num">2</span>;
+<span class="type">float</span> result = (<span class="type">float</span>)a / b;  <span class="cm">// 3.5 (without cast: integer division gives 3)</span>
+
+<span class="type">double</span> pi = <span class="num">3.14159</span>;
+<span class="type">int</span> truncated = (<span class="type">int</span>)pi;      <span class="cm">// 3 (truncation, not rounding)</span>
+    </div>
+
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>Usual Arithmetic Conversions</h4>
+        <p style="font-size:12px;">
+          In mixed expressions, C applies integer promotions and usual arithmetic conversions. Floating types generally dominate integer types, but signed/unsigned integer combinations follow conversion-rank rules.
+        </p>
+      </div>
+      <div class="warn-box">
+        A cast can lose information or hide a mistake. Use an explicit cast only when you can explain why it is safe. Pointer conversions are introduced later in the pointer module.
+      </div>
+    </div>
+
+    <div class="section-head" style="border-bottom-color:rgba(212,175,55,0.3);"><i class="fas fa-code-branch"></i> Branching — if / else</div>
+    <div class="code-block">
+<span class="kw">if</span> (condition) {
+    <span class="cm">// executed if condition is true (non-zero)</span>
+} <span class="kw">else if</span> (another) {
+    <span class="cm">// else-if chain</span>
+} <span class="kw">else</span> {
+    <span class="cm">// fallback</span>
+}
+
+<span class="cm">// Dangling else problem:</span>
+<span class="kw">if</span> (a) <span class="kw">if</span> (b) x(); <span class="kw">else</span> y();
+<span class="cm">// else pairs with NEAREST if (b), NOT (a)!</span>
+<span class="cm">// Use braces to avoid ambiguity.</span>
+    </div>
+
+    <div class="section-head" style="border-bottom-color:rgba(212,175,55,0.3);"><i class="fas fa-list"></i> Branching — switch</div>
+    <div class="code-block">
+<span class="kw">switch</span> (expression) {   <span class="cm">// Must be integer type</span>
+    <span class="kw">case</span> <span class="num">1</span>:
+        <span class="fn">printf</span>(<span class="str">"One\n"</span>);
+        <span class="kw">break</span>;             <span class="cm">// Without break, falls through!</span>
+    <span class="kw">case</span> <span class="num">2</span>:
+    <span class="kw">case</span> <span class="num">3</span>:               <span class="cm">// Cases 2 & 3 share code</span>
+        <span class="fn">printf</span>(<span class="str">"Two or Three\n"</span>);
+        <span class="kw">break</span>;
+    <span class="kw">default</span>:
+        <span class="fn">printf</span>(<span class="str">"Other\n"</span>);
+        <span class="kw">break</span>;             <span class="cm">// Good practice, but optional</span>
+}
+    </div>
+    <div class="note-box">
+      <code>switch</code> only works with integral types (<ic>int</ic>, <ic>char</ic>, <ic>enum</ic>). Case labels must be constant expressions. Always handle <code>default</code>.
+    </div>
+  </div>
+  <div class="page-number">8</div>
+</section>
+<!-- PAGE 9: LOOPS -->
+<section id="page9" class="page page-black">
+  <div class="page-inner">
+    <div class="page-title"><span class="gold">Loops</span></div>
+    <div class="page-subtitle">for &middot; while &middot; do-while &middot; break &middot; continue</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-sync"></i> for Loop</div>
+    <div class="syntax-box">
+      <span class="syn-label">Syntax</span>
+      <code>for (init; condition; update) { body }</code>
+    </div>
+    <div class="code-block">
+<span class="cm">// Standard for loop</span>
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i < <span class="num">10</span>; i++) {
+    <span class="fn">printf</span>(<span class="str">"%d "</span>, i);  <span class="cm">// 0 1 2 ... 9</span>
+}
+
+<span class="cm">// Multiple expressions</span>
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>, j = <span class="num">9</span>; i < j; i++, j--) {
+    <span class="fn">printf</span>(<span class="str">"i=%d j=%d\n"</span>, i, j);
+}
+
+<span class="cm">// Infinite loop</span>
+<span class="kw">for</span> (;;) { <span class="cm">/* runs forever */</span> }
+
+<span class="cm">// Loop with no body</span>
+<span class="kw">for</span> (i = <span class="num">0</span>; str[i] != <span class="str">'\0'</span>; i++); <span class="cm">// Just count length</span>
+
+<span class="cm">// C99: declare variable in init</span>
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; ...); <span class="cm">// i scoped to loop only</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-redo"></i> while Loop</div>
+    <div class="code-block">
+<span class="cm">// Entry-controlled: condition checked BEFORE body</span>
+<span class="kw">while</span> (condition) {
+    <span class="cm">// body may execute 0 or more times</span>
+}
+
+<span class="cm">// Common pattern: read until sentinel</span>
+<span class="type">int</span> x;
+<span class="kw">while</span> (<span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;x) == <span class="num">1</span>) {
+    <span class="fn">printf</span>(<span class="str">"Read: %d\n"</span>, x);
+}
+    </div>
+
+    <div class="section-head"><i class="fas fa-undo"></i> do-while Loop</div>
+    <div class="code-block">
+<span class="cm">// Exit-controlled: body runs AT LEAST ONCE</span>
+<span class="type">int</span> choice;
+<span class="kw">do</span> {
+    <span class="fn">printf</span>(<span class="str">"Enter 1-5: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;choice);
+} <span class="kw">while</span> (choice < <span class="num">1</span> || choice > <span class="num">5</span>);  <span class="cm">// NOTE the semicolon!</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-stop-circle"></i> break &amp; continue</div>
+    <div class="code-block">
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i < <span class="num">100</span>; i++) {
+    <span class="kw">if</span> (i == <span class="num">5</span>) <span class="kw">break</span>;      <span class="cm">// Exit entire loop immediately</span>
+    <span class="kw">if</span> (i % <span class="num">2</span> == <span class="num">0</span>) <span class="kw">continue</span>;  <span class="cm">// Skip to next iteration</span>
+    <span class="fn">printf</span>(<span class="str">"%d "</span>, i);  <span class="cm">// 1 3 (5 never reached)</span>
+}
+
+<span class="cm">// break only exits ONE level of nesting</span>
+<span class="cm">// For multi-level breaks, use flags or goto</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-random"></i> goto</div>
+    <div class="code-block">
+<span class="cm">// Generally AVOID, but useful for nested loop exits:</span>
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i < n; i++)
+    <span class="kw">for</span> (<span class="type">int</span> j = <span class="num">0</span>; j < m; j++)
+        <span class="kw">if</span> (found) <span class="kw">goto</span> cleanup;
+cleanup:
+    <span class="fn">printf</span>(<span class="str">"Done\n"</span>);
+    </div>
+
+    <div class="note-box">
+      Prefer for loops when the iteration count is known. Prefer while when it's driven by a condition. Use do-while when the body must run at least once.
+    </div>
+  </div>
+  <div class="page-number">9</div>
+</section>
+<!-- PAGE 10: ARRAYS & STRINGS -->
+<section id="page10" class="page page-dark">
+  <div class="page-inner">
+    <div class="page-title"><span class="gold">Arrays</span> &amp; <span class="gold">Strings</span></div>
+    <div class="page-subtitle">1D &middot; 2D &middot; string ops &middot; string.h</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-th"></i> 1D Arrays</div>
+    <div class="code-block">
+<span class="type">int</span> nums[<span class="num">5</span>];                       <span class="cm">// Uninitialized (garbage values)</span>
+<span class="type">int</span> nums[<span class="num">5</span>] = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>};   <span class="cm">// Full init</span>
+<span class="type">int</span> nums[<span class="num">5</span>] = {<span class="num">1</span>, <span class="num">2</span>};              <span class="cm">// Partial: [1,2,0,0,0]</span>
+<span class="type">int</span> nums[] = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>};            <span class="cm">// Size inferred: 3</span>
+<span class="type">int</span> nums[<span class="num">5</span>] = {<span class="num">0</span>};                  <span class="cm">// All zeros: [0,0,0,0,0]</span>
+
+<span class="cm">// Array name decays to pointer to first element</span>
+<span class="type">int</span> *p = nums;  <span class="cm">// p == &nums[0]</span>
+<span class="cm">// nums[i] ≡ *(nums + i) ≡ *(p + i) ≡ p[i]</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-border-all"></i> 2D Arrays</div>
+    <div class="code-block">
+<span class="type">int</span> matrix[<span class="num">3</span>][<span class="num">4</span>];                  <span class="cm">// 3 rows, 4 columns</span>
+<span class="type">int</span> matrix[<span class="num">2</span>][<span class="num">3</span>] = {
+    {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>},   <span class="cm">// Row 0</span>
+    {<span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>}    <span class="cm">// Row 1</span>
+};
+<span class="type">int</span> matrix[<span class="num">2</span>][<span class="num">3</span>] = {<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>,<span class="num">5</span>,<span class="num">6</span>}; <span class="cm">// Same, flat init</span>
+
+<span class="cm">// Must specify column size when passing to function:</span>
+<span class="kw">void</span> <span class="fn">print</span>(<span class="type">int</span> m[][<span class="num">4</span>], <span class="type">int</span> rows);
+    </div>
+
+    <div class="section-head"><i class="fas fa-font"></i> Strings (Character Arrays)</div>
+    <div class="code-block">
+<span class="type">char</span> str[] = <span class="str">"Hello"</span>;    <span class="cm">// 6 chars: 'H','e','l','l','o','\0'</span>
+<span class="type">char</span> str[<span class="num">6</span>] = <span class="str">"Hello"</span>;    <span class="cm">// Explicit size (includes \0)</span>
+<span class="type">char</span> str[] = {<span class="str">'H'</span>,<span class="str">'i'</span>,<span class="str">'\0'</span>}; <span class="cm">// Char-by-char (must add \0)</span>
+
+<span class="kw">const</span> <span class="type">char</span> *sp = <span class="str">"Hello"</span>; <span class="cm">// View of a string literal: do not modify through sp</span>
+<span class="cm">// sp[0] = 'J';  // UNDEFINED BEHAVIOR on many systems</span>
+
+<span class="type">char</span> sa[] = <span class="str">"Hello"</span>;     <span class="cm">// Array copy (modifiable)</span>
+sa[<span class="num">0</span>] = <span class="str">'J'</span>;                 <span class="cm">// OK → "Jello"</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-wrench"></i> String Functions (&lt;string.h&gt;)</div>
+    <table class="ref-table">
+      <tr><th>Function</th><th>Description</th><th>Example</th></tr>
+      <tr><td><code>strlen(s)</code></td><td>Length (excludes \0)</td><td>strlen("Hi") → 2</td></tr>
+      <tr><td><code>strcpy(d,s)</code></td><td>Copy s to d (unsafe)</td><td>strcpy(d, "Hi")</td></tr>
+      <tr><td><code>strncpy(d,s,n)</code></td><td>Copy at most n chars; may omit <code>\0</code> when source is long</td><td>strncpy(d, s, 9)</td></tr>
+      <tr><td><code>strcat(d,s)</code></td><td>Append s to d</td><td>strcat(d, " World")</td></tr>
+      <tr><td><code>strncat(d,s,n)</code></td><td>Append at most n chars; destination still needs enough space</td><td>strncat(d, s, 5)</td></tr>
+      <tr><td><code>strcmp(s1,s2)</code></td><td>Compare: 0=equal, &lt;0,&gt;0</td><td>if (strcmp(a,b)==0)</td></tr>
+      <tr><td><code>strncmp(s1,s2,n)</code></td><td>Compare first n chars</td><td>strncmp(s,"hi",2)</td></tr>
+      <tr><td><code>strchr(s,c)</code></td><td>Find first c in s</td><td>strchr("abc",'b')</td></tr>
+      <tr><td><code>strrchr(s,c)</code></td><td>Find last c in s</td><td>strrchr("abcb",'b')</td></tr>
+      <tr><td><code>strstr(s,sub)</code></td><td>Find substring</td><td>strstr("hello","ell")</td></tr>
+      <tr><td><code>strtok(s,delim)</code></td><td>Tokenize string</td><td>strtok(s, " ,")</td></tr>
+      <tr><td><code>memcpy(d,s,n)</code></td><td>Copy n bytes</td><td>memcpy(d, s, 10)</td></tr>
+      <tr><td><code>memmove(d,s,n)</code></td><td>Safe copy (overlapping OK)</td><td>memmove(d+2, d, 5)</td></tr>
+      <tr><td><code>memset(s,c,n)</code></td><td>Set n bytes to c</td><td>memset(arr, 0, sizeof(arr))</td></tr>
+    </table>
+
+    <div class="note-box">
+      <code>strcpy</code> and <code>strcat</code> do not know the destination capacity. <code>strncpy</code> and <code>strncat</code> are not automatically safe either: they can truncate without the behavior beginners expect and still require capacity calculations. Prefer <code>snprintf</code> for formatted construction, <code>fgets</code> for line input, and explicit length checks.
+    </div>
+  </div>
+  <div class="page-number">10</div>
+</section>
+<!-- PAGE 11: FUNCTIONS -->
+<section id="page11" class="page page-light">
+  <div class="page-inner">
+    <div class="page-title"><span class="red">Functions</span></div>
+    <div class="page-subtitle">declaration &middot; definition &middot; parameters &middot; return</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-cogs"></i> Declaration (Prototype)</div>
+    <div class="syntax-box">
+      <span class="syn-label">Syntax</span>
+      <code>return_type function_name(param_type param_name, ...);</code>
+    </div>
+    <div class="code-block">
+<span class="cm">// Function prototype (declaration) — usually in header file</span>
+<span class="type">int</span> <span class="fn">add</span>(<span class="type">int</span> a, <span class="type">int</span> b);          <span class="cm">// Named params</span>
+<span class="type">int</span> <span class="fn">add</span>(<span class="type">int</span>, <span class="type">int</span>);               <span class="cm">// Names optional in prototype</span>
+<span class="kw">void</span> <span class="fn">print_msg</span>(<span class="kw">const</span> <span class="type">char</span> *s);   <span class="cm">// No return</span>
+<span class="type">int</span> <span class="fn">rand_num</span>(<span class="kw">void</span>);              <span class="cm">// Explicitly no params</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-hammer"></i> Definition (Implementation)</div>
+    <div class="code-block">
+<span class="cm">// Function definition — must match prototype</span>
+<span class="type">int</span> <span class="fn">add</span>(<span class="type">int</span> a, <span class="type">int</span> b) {
+    <span class="kw">return</span> a + b;
+}
+
+<span class="kw">void</span> <span class="fn">swap</span>(<span class="type">int</span> *a, <span class="type">int</span> *b) {   <span class="cm">// Pass by reference via pointers</span>
+    <span class="type">int</span> temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+<span class="type">int</span> <span class="fn">factorial</span>(<span class="type">int</span> n) {
+    <span class="kw">if</span> (n <= <span class="num">1</span>) <span class="kw">return</span> <span class="num">1</span>;       <span class="cm">// Early return</span>
+    <span class="kw">return</span> n * <span class="fn">factorial</span>(n - <span class="num">1</span>);
+}
+    </div>
+
+    <div class="section-head"><i class="fas fa-exchange-alt"></i> Parameter Passing</div>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>Pass by Value</h4>
+        <p>Default in C. Function gets a <em>copy</em>. Changes inside the function do NOT affect the original.</p>
+        <div class="code-block" style="margin-top:8px;font-size:12px;">
+<span class="kw">void</span> <span class="fn">try_change</span>(<span class="type">int</span> x) {
+    x = <span class="num">99</span>; <span class="cm">// No effect on caller</span>
+}
+        </div>
+      </div>
+      <div class="info-card">
+        <h4>Pass by Pointer</h4>
+        <p>Simulates pass-by-reference. Pass the address so the function can modify the original.</p>
+        <div class="code-block" style="margin-top:8px;font-size:12px;">
+<span class="kw">void</span> <span class="fn">actually_change</span>(<span class="type">int</span> *x) {
+    *x = <span class="num">99</span>; <span class="cm">// Modifies caller's var</span>
+}
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-ellipsis-h"></i> Variable Arguments</div>
+    <div class="code-block">
+<span class="pp">#include</span> <span class="str">&lt;stdarg.h&gt;</span>
+
+<span class="type">int</span> <span class="fn">sum</span>(<span class="type">int</span> count, ...) {
+    <span class="type">va_list</span> args;
+    <span class="fn">va_start</span>(args, count);
+
+    <span class="type">int</span> total = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i < count; i++)
+        total += <span class="fn">va_arg</span>(args, <span class="type">int</span>);
+
+    <span class="fn">va_end</span>(args);
+    <span class="kw">return</span> total;
+}
+
+<span class="fn">sum</span>(<span class="num">3</span>, <span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>);  <span class="cm">// 60</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-arrow-right"></i> Return Values</div>
+    <div class="code-block">
+<span class="kw">void</span> <span class="fn">no_return</span>(<span class="kw">void</span>);          <span class="cm">// Returns nothing, takes no parameters</span>
+<span class="type">int</span>  <span class="fn">returns_int</span>(<span class="kw">void</span>);        <span class="cm">// Returns int, takes no parameters</span>
+<span class="type">int</span> * <span class="fn">returns_pointer</span>(<span class="kw">void</span>);    <span class="cm">// Returns pointer to int</span>
+
+<span class="cm">// NEVER return pointer to local variable:</span>
+<span class="type">int</span> * <span class="fn">bad</span>(<span class="kw">void</span>) {
+    <span class="type">int</span> local = <span class="num">42</span>;
+    <span class="kw">return</span> &amp;local;  <span class="cm">// UNDEFINED BEHAVIOR!</span>
+}
+    </div>
+  </div>
+  <div class="page-number">11</div>
+</section>
+<!-- PAGE 12: RECURSION -->
+<section id="page12" class="page page-dark">
+  <div class="page-inner">
+    <div class="page-title"><span class="gold">Recursion</span></div>
+    <div class="page-subtitle">base case &middot; recursive case &middot; examples &middot; pitfalls</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-layer-group"></i> Anatomy of Recursion</div>
+    <div class="code-block">
+<span class="type">return_type</span> <span class="fn">recursive</span>(params) {
+    <span class="kw">if</span> (base_condition) {
+        <span class="kw">return</span> base_value;      <span class="cm">// BASE CASE (stops recursion)</span>
+    }
+    <span class="cm">// Recursive case: call itself with smaller input</span>
+    <span class="kw">return</span> <span class="fn">recursive</span>(smaller_params);
+}
+    </div>
+
+    <div class="section-head"><i class="fas fa-star"></i> Classic Examples</div>
+    <div class="grid-2">
+      <div class="code-block" style="font-size:12px;">
+<span class="cm">// Factorial: n! = n * (n-1)!</span>
+<span class="type">long</span> <span class="fn">fact</span>(<span class="type">int</span> n) {
+    <span class="kw">if</span> (n <= <span class="num">1</span>) <span class="kw">return</span> <span class="num">1</span>;
+    <span class="kw">return</span> n * <span class="fn">fact</span>(n - <span class="num">1</span>);
+}
+<span class="cm">// fact(5) → 5*4*3*2*1 = 120</span>
+      </div>
+      <div class="code-block" style="font-size:12px;">
+<span class="cm">// Fibonacci: F(n) = F(n-1) + F(n-2)</span>
+<span class="type">int</span> <span class="fn">fib</span>(<span class="type">int</span> n) {
+    <span class="kw">if</span> (n <= <span class="num">1</span>) <span class="kw">return</span> n;
+    <span class="kw">return</span> <span class="fn">fib</span>(n-<span class="num">1</span>) + <span class="fn">fib</span>(n-<span class="num">2</span>);
+}
+<span class="cm">// fib(6) → 8</span>
+<span class="cm">// WARNING: O(2^n) time!</span>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="code-block" style="font-size:12px;">
+<span class="cm">// Tower of Hanoi</span>
+<span class="kw">void</span> <span class="fn">hanoi</span>(<span class="type">int</span> n, <span class="type">char</span> from,
+             <span class="type">char</span> to, <span class="type">char</span> aux) {
+    <span class="kw">if</span> (n == <span class="num">1</span>) {
+        <span class="fn">printf</span>(<span class="str">"%c → %c\n"</span>, from, to);
+        <span class="kw">return</span>;
+    }
+    <span class="fn">hanoi</span>(n-<span class="num">1</span>, from, aux, to);
+    <span class="fn">hanoi</span>(<span class="num">1</span>, from, to, aux);
+    <span class="fn">hanoi</span>(n-<span class="num">1</span>, aux, to, from);
+}
+      </div>
+      <div class="code-block" style="font-size:12px;">
+<span class="cm">// Binary Search (recursive)</span>
+<span class="type">int</span> <span class="fn">binary_search_recursive</span>(<span class="type">int</span> arr[], <span class="type">int</span> lo,
+              <span class="type">int</span> hi, <span class="type">int</span> target) {
+    <span class="kw">if</span> (lo > hi) <span class="kw">return</span> -<span class="num">1</span>;
+    <span class="type">int</span> mid = lo + (hi - lo) / <span class="num">2</span>;
+    <span class="kw">if</span> (arr[mid] == target) <span class="kw">return</span> mid;
+    <span class="kw">if</span> (arr[mid] > target)
+        <span class="kw">return</span> <span class="fn">binary_search_recursive</span>(arr, lo, mid-<span class="num">1</span>, target);
+    <span class="kw">return</span> <span class="fn">binary_search_recursive</span>(arr, mid+<span class="num">1</span>, hi, target);
+}
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-exclamation-triangle"></i> Recursion vs Iteration</div>
+    <div class="compare-box">
+      <div class="compare-side compare-left">
+        <strong style="color:var(--gold);">Recursion</strong><br>
+        Elegant, matches mathematical definition<br>
+        Uses call stack (O(n) space typically)<br>
+        Can cause stack overflow<br>
+        Often slower (function call overhead)<br>
+        Easier to write for trees/graphs
+      </div>
+      <div class="compare-mid">VS</div>
+      <div class="compare-side compare-right">
+        <strong style="color:var(--red-light);">Iteration</strong><br>
+        More verbose but explicit<br>
+        Constant space (O(1) typically)<br>
+        No stack overflow risk<br>
+        Generally faster<br>
+        Better for simple linear processes
+      </div>
+    </div>
+
+    <div class="warn-box">
+      Every recursive function MUST have a base case that is guaranteed to be reached. Without it: infinite recursion → stack overflow → undefined behavior.
+    </div>
+
+    <div class="section-head"><i class="fas fa-bolt"></i> Tail Recursion</div>
+    <div class="code-block">
+<span class="cm">// Tail recursion: recursive call is the LAST operation</span>
+<span class="type">int</span> <span class="fn">fact_tail</span>(<span class="type">int</span> n, <span class="type">int</span> acc) {
+    <span class="kw">if</span> (n <= <span class="num">1</span>) <span class="kw">return</span> acc;
+    <span class="kw">return</span> <span class="fn">fact_tail</span>(n - <span class="num">1</span>, n * acc); <span class="cm">// No computation after call</span>
+}
+<span class="fn">fact_tail</span>(<span class="num">5</span>, <span class="num">1</span>); <span class="cm">// 120</span>
+
+<span class="cm">// Compilers can optimize tail calls to reuse the stack frame</span>
+<span class="cm">// (tail call optimization — not guaranteed in C standard)</span>
+    </div>
+  </div>
+  <div class="page-number">12</div>
+</section>
+<!-- PAGE 13: STRUCTS -->
+<section id="page13" class="page page-light">
+  <div class="page-inner">
+    <div class="page-title"><span class="red">Structs</span></div>
+    <div class="page-subtitle">definition &middot; initialization &middot; nesting &middot; pointers &middot; typedef</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-cube"></i> Definition &amp; Initialization</div>
+    <div class="code-block">
+<span class="cm">// Define a struct</span>
+<span class="kw">struct</span> <span class="type">Point</span> {
+    <span class="type">double</span> x;
+    <span class="type">double</span> y;
+};
+
+<span class="cm">// Create and initialize</span>
+<span class="kw">struct</span> <span class="type">Point</span> p1 = {<span class="num">3.0</span>, <span class="num">4.0</span>};             <span class="cm">// Positional init</span>
+<span class="kw">struct</span> <span class="type">Point</span> p2 = {.y = <span class="num">5.0</span>, .x = <span class="num">2.0</span>};    <span class="cm">// Designated init (C99)</span>
+<span class="kw">struct</span> <span class="type">Point</span> p3;                          <span class="cm">// Uninitialized</span>
+<span class="kw">struct</span> <span class="type">Point</span> p4 = {<span class="num">0</span>};                     <span class="cm">// All members zeroed</span>
+
+<span class="cm">// Access members with dot operator</span>
+p1.x = <span class="num">10.0</span>;
+<span class="fn">printf</span>(<span class="str">"(%.1f, %.1f)\n"</span>, p1.x, p1.y);
+    </div>
+
+    <div class="section-head"><i class="fas fa-signature"></i> typedef with Structs</div>
+    <div class="code-block">
+<span class="kw">typedef struct</span> {
+    <span class="type">char</span> name[<span class="num">50</span>];
+    <span class="type">int</span> age;
+    <span class="type">float</span> gpa;
+} <span class="type">Student</span>;
+
+<span class="cm">// Now use without 'struct' keyword:</span>
+<span class="type">Student</span> s1 = {<span class="str">"Alice"</span>, <span class="num">20</span>, <span class="num">3.8</span>};
+<span class="type">Student</span> s2 = {.age = <span class="num">22</span>, .gpa = <span class="num">3.5</span>, .name = <span class="str">"Bob"</span>};
+    </div>
+
+    <div class="section-head"><i class="fas fa-sitemap"></i> Nested Structs</div>
+    <div class="code-block">
+<span class="kw">typedef struct</span> {
+    <span class="type">int</span> day, month, year;
+} <span class="type">Date</span>;
+
+<span class="kw">typedef struct</span> {
+    <span class="type">char</span> title[<span class="num">100</span>];
+    <span class="type">char</span> author[<span class="num">50</span>];
+    <span class="type">Date</span> published;     <span class="cm">// Nested struct</span>
+    <span class="type">float</span> price;
+} <span class="type">Book</span>;
+
+<span class="type">Book</span> b = {
+    .title = <span class="str">"The C Programming Language"</span>,
+    .author = <span class="str">"K&R"</span>,
+    .published = {.day=<span class="num">22</span>, .month=<span class="num">2</span>, .year=<span class="num">1978</span>},
+    .price = <span class="num">52.99</span>
+};
+<span class="fn">printf</span>(<span class="str">"%d"</span>, b.published.year);  <span class="cm">// 1978</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-arrow-right"></i> Accessing Members</div>
+    <div class="code-block">
+<span class="type">Student</span> s = {<span class="str">"Charlie"</span>, <span class="num">21</span>, <span class="num">3.9</span>};
+
+<span class="fn">printf</span>(<span class="str">"%s is %d\n"</span>, s.name, s.age);
+s.age = <span class="num">22</span>;
+
+<span class="cm">// Passing a struct by value copies the complete struct</span>
+<span class="kw">void</span> <span class="fn">print_student</span>(<span class="type">Student</span> student) {
+    <span class="fn">printf</span>(<span class="str">"%s, age %d\n"</span>, student.name, student.age);
+}
+    </div>
+    <div class="note-box">
+      Use the dot operator <code>.</code> with a struct object. Later, the Advanced Pointers section introduces <code>-&gt;</code> and passing a pointer to a struct when copying is undesirable.
+    </div>
+
+    <div class="section-head"><i class="fas fa-memory"></i> Memory &amp; Alignment</div>
+    <div class="code-block">
+<span class="kw">struct</span> <span class="type">Example</span> {
+    <span class="type">char</span> c;    <span class="cm">// 1 byte + 3 padding</span>
+    <span class="type">int</span> i;     <span class="cm">// 4 bytes</span>
+    <span class="type">char</span> d;    <span class="cm">// 1 byte + 3 padding</span>
+};  <span class="cm">// sizeof may be 12, not 6 (due to alignment)</span>
+
+<span class="cm">// Reorder for smaller size:</span>
+<span class="kw">struct</span> <span class="type">Optimized</span> {
+    <span class="type">int</span> i;     <span class="cm">// 4 bytes</span>
+    <span class="type">char</span> c;    <span class="cm">// 1 byte</span>
+    <span class="type">char</span> d;    <span class="cm">// 1 byte + 2 padding</span>
+};  <span class="cm">// sizeof may be 8</span>
+
+<span class="cm">// Flexible array member (C99):</span>
+<span class="kw">struct</span> <span class="type">Buffer</span> {
+    <span class="type">size_t</span> len;
+    <span class="type">char</span> data[];  <span class="cm">// Must be last member</span>
+};
+    </div>
+
+    <div class="note-box">
+      Structs are passed by value by default, which creates a full copy. Once pointers are introduced, you can pass a pointer to avoid that copy; use a <ic>const</ic> pointer when the function should only read the struct.
+    </div>
+  </div>
+  <div class="page-number">13</div>
+</section>
+<!-- PAGE 14: ENUMS & UNIONS -->
+<section id="page14" class="page page-dark">
+  <div class="page-inner">
+    <div class="page-title"><span class="gold">Enums</span> &amp; <span class="gold">Unions</span></div>
+    <div class="page-subtitle">enumerations &middot; union types &middot; bit-fields</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-list-ol"></i> Enumerations</div>
+    <div class="code-block">
+<span class="cm">// Basic enum (values start at 0 by default)</span>
+<span class="kw">enum</span> <span class="type">Day</span> { MON, TUE, WED, THU, FRI, SAT, SUN };
+<span class="cm">// MON=0, TUE=1, ..., SUN=6</span>
+
+<span class="cm">// Custom values</span>
+<span class="kw">enum</span> <span class="type">Month</span> {
+    JAN = <span class="num">1</span>, FEB, MAR, APR, MAY, JUN,
+    JUL, AUG, SEP, OCT, NOV, DEC
+}; <span class="cm">// FEB=2, MAR=3, ..., DEC=12</span>
+
+<span class="cm">// Non-sequential values</span>
+<span class="kw">enum</span> <span class="type">ErrorCode</span> {
+    OK = <span class="num">0</span>,
+    ERR_INVALID = <span class="num">-1</span>,
+    ERR_NOT_FOUND = <span class="num">-2</span>,
+    ERR_PERMISSION = <span class="num">-3</span>
+};
+
+<span class="kw">enum</span> <span class="type">Day</span> today = WED;
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, today);  <span class="cm">// 2</span>
+
+<span class="cm">// Use with switch (compiler can warn about missing cases)</span>
+<span class="kw">switch</span> (today) {
+    <span class="kw">case</span> MON: <span class="kw">case</span> TUE: <span class="kw">case</span> WED:
+    <span class="kw">case</span> THU: <span class="kw">case</span> FRI:
+        <span class="fn">printf</span>(<span class="str">"Weekday\n"</span>); <span class="kw">break</span>;
+    <span class="kw">case</span> SAT: <span class="kw">case</span> SUN:
+        <span class="fn">printf</span>(<span class="str">"Weekend\n"</span>); <span class="kw">break</span>;
+}
+
+<span class="cm">// Typedef for cleaner syntax</span>
+<span class="kw">typedef enum</span> { RED, GREEN, BLUE } <span class="type">Color</span>;
+<span class="type">Color</span> c = GREEN;
+    </div>
+
+    <div class="section-head"><i class="fas fa-object-group"></i> Unions</div>
+    <div class="code-block">
+<span class="cm">// Union: all members share the SAME memory</span>
+<span class="cm">// Size = size of LARGEST member</span>
+<span class="kw">union</span> <span class="type">Data</span> {
+    <span class="type">int</span> i;
+    <span class="type">float</span> f;
+    <span class="type">char</span> str[<span class="num">20</span>];
+};
+
+<span class="kw">union</span> <span class="type">Data</span> d;
+d.i = <span class="num">42</span>;
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, d.i);  <span class="cm">// OK — last written was i</span>
+<span class="cm">// Do not treat this as numeric conversion:</span>\n<span class="cm">// interpreting d.f after writing d.i is non-portable and may be meaningless.</span>
+
+<span class="cm">// Typical portable pattern: tagged union (variant)</span>
+<span class="kw">typedef struct</span> {
+    <span class="kw">enum</span> { INT_VAL, FLOAT_VAL, STR_VAL } type;
+    <span class="kw">union</span> {
+        <span class="type">int</span> ival;
+        <span class="type">float</span> fval;
+        <span class="type">char</span> sval[<span class="num">20</span>];
+    } value;
+} <span class="type">Variant</span>;
+
+<span class="type">Variant</span> v;
+v.type = FLOAT_VAL;
+v.value.fval = <span class="num">3.14f</span>;
+    </div>
+
+    <div class="section-head"><i class="fas fa-th-large"></i> Bit-fields</div>
+    <div class="code-block">
+<span class="cm">// Specify exact bit width for each member</span>
+<span class="kw">struct</span> <span class="type">Flags</span> {
+    <span class="type">unsigned int</span> is_active : <span class="num">1</span>;   <span class="cm">// 1 bit</span>
+    <span class="type">unsigned int</span> priority  : <span class="num">3</span>;   <span class="cm">// 3 bits (0-7)</span>
+    <span class="type">unsigned int</span> code      : <span class="num">4</span>;   <span class="cm">// 4 bits (0-15)</span>
+    <span class="type">unsigned int</span>           : <span class="num">0</span>;   <span class="cm">// Force alignment to next boundary</span>
+    <span class="type">unsigned int</span> id        : <span class="num">8</span>;   <span class="cm">// 8 bits (0-255)</span>
+};
+
+<span class="kw">struct</span> <span class="type">Flags</span> f = {<span class="num">1</span>, <span class="num">5</span>, <span class="num">10</span>, <span class="num">200</span>};
+<span class="fn">printf</span>(<span class="str">"active=%d, pri=%d\n"</span>, f.is_active, f.priority);
+    </div>
+
+    <div class="note-box">
+      Bit-fields are implementation-dependent: ordering, padding, and sign are not standardized. They're useful for hardware register mapping and saving memory, but avoid them in portable code.
+    </div>
+
+    <div class="section-head"><i class="fas fa-columns"></i> Struct vs Union Quick Comparison</div>
+    <div class="compare-box">
+      <div class="compare-side compare-left">
+        <strong style="color:var(--gold);">struct</strong><br>
+        Each member has own memory<br>
+        Size = sum of members + padding<br>
+        Can use all members at once<br>
+        Most common composite type
+      </div>
+      <div class="compare-mid">VS</div>
+      <div class="compare-side compare-right">
+        <strong style="color:var(--red-light);">union</strong><br>
+        Members share same memory<br>
+        Size is at least the largest member, plus possible padding<br>
+        Track which member is currently active<br>
+        Useful for tagged variants and compact storage
+      </div>
+    </div>
+  </div>
+  <div class="page-number">14</div>
+</section>
+<!-- PAGE 15: PREPROCESSOR & MACROS -->
+<section id="page15" class="page page-light">
+  <div class="page-inner">
+    <div class="page-title"><span class="red">Preprocessor</span></div>
+    <div class="page-subtitle">macros &middot; includes &middot; conditionals &middot; pragmas</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-file-import"></i> #include</div>
+    <div class="code-block">
+<span class="pp">#include</span> <span class="str">&lt;stdio.h&gt;</span>    <span class="cm">// System header (searches standard paths)</span>
+<span class="pp">#include</span> <span class="str">"myheader.h"</span>  <span class="cm">// User header (searches current dir first)</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-hashtag"></i> #define (Object-like Macros)</div>
+    <div class="code-block">
+<span class="pp">#define</span> <span class="pp">PI</span> <span class="num">3.14159</span>
+<span class="pp">#define</span> <span class="pp">MAX_SIZE</span> <span class="num">100</span>
+<span class="pp">#define</span> <span class="pp">MSG</span> <span class="str">"Hello, World!"</span>
+
+<span class="cm">// Undefine a macro</span>
+<span class="pp">#undef</span> <span class="pp">MAX_SIZE</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-code"></i> #define (Function-like Macros)</div>
+    <div class="code-block">
+<span class="pp">#define</span> <span class="fn">SQUARE(x)</span> ((x) * (x))          <span class="cm">// Parenthesize parameters and whole expression</span>
+<span class="pp">#define</span> <span class="fn">MAX(a, b)</span> ((a) > (b) ? (a) : (b))
+<span class="pp">#define</span> <span class="fn">MIN(a, b)</span> ((a) < (b) ? (a) : (b))
+<span class="pp">#define</span> <span class="fn">ARRAY_COUNT(a)</span> (<span class="kw">sizeof</span>(a) / <span class="kw">sizeof</span>((a)[<span class="num">0</span>]))
+
+<span class="cm">// Multi-line macro: behaves like one statement</span>
+<span class="pp">#define</span> <span class="fn">PRINT_MESSAGE(msg)</span> <span class="kw">do</span> {     <span class="fn">puts</span>(msg); } <span class="kw">while</span> (<span class="num">0</span>)
+    </div>
+
+    <div class="warn-box">
+      <code>#define SQUARE(x) x * x</code> is wrong because <code>SQUARE(2+3)</code> expands to <code>2+3 * 2+3</code>. Even the parenthesized macro form can evaluate an argument more than once: never write <code>MAX(i++, j++)</code> or <code>SQUARE(i++)</code>. <code>ARRAY_COUNT(a)</code> works only for a real array in the current scope, not for a pointer.
+    </div>
+    <div class="section-head"><i class="fas fa-link"></i> Stringification &amp; Token Pasting</div>
+    <div class="code-block">
+<span class="cm">// # operator: stringify a macro argument</span>
+<span class="pp">#define</span> <span class="fn">PRINT_VAR(x)</span> <span class="fn">printf</span>(<span class="str">"%s = %d\n"</span>, <span class="pp">#x</span>, x)
+<span class="cm">// PRINT_VAR(score) → printf("%s = %d\n", "score", score)</span>
+
+<span class="cm">// ## operator: concatenate tokens</span>
+<span class="pp">#define</span> <span class="fn">MAKE_FUNC(name)</span> <span class="kw">void</span> name##<span class="fn">_handler</span>()
+<span class="cm">// MAKE_FUNC(click) → void click_handler()</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-code-branch"></i> Conditional Compilation</div>
+    <div class="code-block">
+<span class="pp">#if</span> DEBUG == <span class="num">1</span>
+    <span class="fn">printf</span>(<span class="str">"Debug mode\n"</span>);
+<span class="pp">#elif</span> DEBUG == <span class="num">2</span>
+    <span class="fn">printf</span>(<span class="str">"Verbose mode\n"</span>);
+<span class="pp">#else</span>
+    <span class="cm">// Release build</span>
+<span class="pp">#endif</span>
+
+<span class="pp">#ifdef</span> <span class="pp">USE_OPENSSL</span>
+<span class="cm">// Feature-specific code goes here</span>
+<span class="pp">#endif</span>
+
+<span class="pp">#ifndef</span> <span class="pp">HEADER_H</span>      <span class="cm">// If HEADER_H is NOT defined</span>
+
+<span class="cm">// Include guard pattern:</span>
+<span class="pp">#ifndef</span> <span class="pp">MYHEADER_H</span>
+<span class="pp">#define</span> <span class="pp">MYHEADER_H</span>
+<span class="cm">// ... header contents ...</span>
+<span class="pp">#endif</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-info-circle"></i> Predefined Macros &amp; Identifiers</div>
+    <table class="ref-table">
+      <tr><th>Macro</th><th>Value</th></tr>
+      <tr><td><code>__FILE__</code></td><td>Current source filename (string)</td></tr>
+      <tr><td><code>__LINE__</code></td><td>Current line number (int)</td></tr>
+      <tr><td><code>__DATE__</code></td><td>Compilation date (string)</td></tr>
+      <tr><td><code>__TIME__</code></td><td>Compilation time (string)</td></tr>
+      <tr><td><code>__func__</code></td><td>Current function name; predefined identifier in C99, usable inside a function</td></tr>
+      <tr><td><code>__STDC__</code></td><td>1 if compiler conforms to ANSI C</td></tr>
+      <tr><td><code>__STDC_VERSION__</code></td><td>C standard version (e.g., 201112L for C11)</td></tr>
+    </table>
+  </div>
+  <div class="page-number">15</div>
+</section>
+<!-- PAGE 16: POINTER FUNDAMENTALS -->
+<section id="page16" class="page page-light">
+  <div class="page-inner">
+    <div class="page-title"><span class="red">Pointer</span> Fundamentals</div>
+    <div class="page-subtitle">addresses &middot; dereferencing &middot; pointer types &middot; null</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-location-dot"></i> What Is a Pointer?</div>
+    <p>A pointer is a variable that stores the address of another object or function. The <ic>&amp;</ic> operator gets an address, and the unary <ic>*</ic> operator dereferences a pointer to access the value at that address.</p>
+    <div class="code-block">
+<span class="pp">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="type">int</span> <span class="fn">main</span>(<span class="kw">void</span>) {
+    <span class="type">int</span> value = <span class="num">42</span>;
+    <span class="type">int</span> *ptr = &amp;value;
+
+    <span class="fn">printf</span>(<span class="str">"value = %d\n"</span>, value);
+    <span class="fn">printf</span>(<span class="str">"address = %p\n"</span>, (<span class="kw">void</span> *)ptr);
+    <span class="fn">printf</span>(<span class="str">"through pointer = %d\n"</span>, *ptr);
+
+    *ptr = <span class="num">100</span>;
+    <span class="fn">printf</span>(<span class="str">"new value = %d\n"</span>, value);
+
+    <span class="kw">return</span> <span class="num">0</span>;
+}
+    </div>
+
+    <div class="section-head"><i class="fas fa-table-cells"></i> Common Pointer Declarations</div>
+    <table class="ref-table">
+      <tr><th>Declaration</th><th>Meaning</th></tr>
+      <tr><td><code>int *p;</code></td><td>Pointer to <code>int</code></td></tr>
+      <tr><td><code>char *text;</code></td><td>Pointer to <code>char</code>; often points to the first character of a string</td></tr>
+      <tr><td><code>float *fp;</code></td><td>Pointer to <code>float</code></td></tr>
+      <tr><td><code>void *data;</code></td><td>Generic pointer to an object; convert to the correct object-pointer type before dereferencing</td></tr>
+      <tr><td><code>int **pp;</code></td><td>Pointer to a pointer to <code>int</code></td></tr>
+      <tr><td><code>const int *p;</code></td><td>Pointer to a const <code>int</code>; cannot modify <code>*p</code> through this pointer</td></tr>
+      <tr><td><code>int * const p = &amp;x;</code></td><td>Const pointer; its stored address cannot change after initialization</td></tr>
+      <tr><td><code>const int * const p = &amp;x;</code></td><td>Const pointer to a const <code>int</code></td></tr>
+          </table>
+
+    <div class="section-head"><i class="fas fa-code-branch"></i> Pointer to Pointer</div>
+    <div class="code-block">
+<span class="type">int</span> value = <span class="num">7</span>;
+<span class="type">int</span> *ptr = &amp;value;
+<span class="type">int</span> **ptr_to_ptr = &amp;ptr;
+
+**ptr_to_ptr = <span class="num">21</span>;
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, value);  <span class="cm">// 21</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-ban"></i> NULL Pointer</div>
+    <div class="code-block">
+<span class="pp">#include</span> <span class="str">&lt;stddef.h&gt;</span>
+
+<span class="type">int</span> *ptr = <span class="pp">NULL</span>;
+
+<span class="kw">if</span> (ptr != <span class="pp">NULL</span>) {
+    <span class="fn">printf</span>(<span class="str">"%d\n"</span>, *ptr);
+}
+    </div>
+    <div class="warn-box">
+      <code>NULL</code> is a null pointer constant. When assigned to a pointer, it creates a pointer value that does not point to an object or function. It is safe to compare or assign, but dereferencing it is undefined behavior.
+    </div>
+
+    <div class="note-box">
+      Read complex declarations from the variable name outward. For example, <code>int *p</code> means “p is a pointer to int,” while <code>int (*p)[5]</code> means “p is a pointer to an array of 5 ints.”
+    </div>
+  </div>
+  <div class="page-number">16</div>
+</section>
+<!-- PAGE 17: POINTER SAFETY -->
+<section id="page17" class="page page-dark">
+  <div class="page-inner">
+    <div class="page-title"><span class="gold">Pointer</span> Safety</div>
+    <div class="page-subtitle">null &middot; wild &middot; dangling &middot; array safety</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-triangle-exclamation"></i> Unsafe Pointer States</div>
+    <table class="ref-table">
+      <tr><th>State</th><th>What It Means</th><th>Safe Response</th></tr>
+      <tr><td><code>NULL pointer</code></td><td>Intentionally points to no object</td><td>Check before dereferencing; initialize optional pointers to <code>NULL</code></td></tr>
+      <tr><td><code>Wild pointer</code></td><td>An uninitialized pointer with an indeterminate value</td><td>Initialize it immediately, usually to <code>NULL</code> or a valid address</td></tr>
+      <tr><td><code>Dangling pointer</code></td><td>Still stores an old address after the pointed-to object lifetime has ended</td><td>Do not use it; reset it to <code>NULL</code> after <code>free</code> when appropriate</td></tr>
+    </table>
+
+    <div class="grid-2">
+      <div>
+        <div class="section-head"><i class="fas fa-bug"></i> Wild Pointer</div>
+        <div class="code-block">
+<span class="type">int</span> *wild;
+
+<span class="cm">// *wild = 10;  // Undefined behavior: wild is uninitialized</span>
+
+wild = <span class="pp">NULL</span>;  <span class="cm">// Safe initial state</span>
+        </div>
+      </div>
+      <div>
+        <div class="section-head"><i class="fas fa-link-slash"></i> Dangling Pointer</div>
+        <div class="code-block">
+<span class="type">int</span> *numbers = <span class="fn">malloc</span>(<span class="num">4</span> * <span class="kw">sizeof</span> *numbers);
+
+<span class="kw">if</span> (numbers != <span class="pp">NULL</span>) {
+    <span class="fn">free</span>(numbers);
+    numbers = <span class="pp">NULL</span>;
+}
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-right-left"></i> Pointers and Arrays</div>
+    <div class="code-block">
+<span class="type">int</span> values[] = { <span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span> };
+<span class="type">int</span> *ptr = values;  <span class="cm">// points to values[0]</span>
+
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, *ptr);           <span class="cm">// 10</span>
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, *(ptr + <span class="num">2</span>));     <span class="cm">// 30</span>
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, values[<span class="num">2</span>]);      <span class="cm">// same value as *(values + 2)</span>
+
+ptr++;
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, *ptr);           <span class="cm">// 20</span>
+    </div>
+    <div class="note-box">
+      Pointer arithmetic scales by the pointed-to type. You may form a one-past-the-end pointer for iteration, but you must never dereference it. Relational comparisons such as <code>&lt;</code> and <code>&gt;</code> are meaningful only for pointers into the same array object (or one past it).
+    </div>
+
+    <div class="section-head"><i class="fas fa-clock"></i> Lifetime Reminder</div>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>Automatic Objects</h4>
+        <p>Local variables normally stop existing when their enclosing block or function ends. Returning their address creates a dangling pointer.</p>
+      </div>
+      <div class="info-card">
+        <h4>Dynamic Objects</h4>
+        <p>Heap allocations remain valid until they are released with <ic>free</ic>. The next page covers allocation, resizing, ownership, and freeing in detail.</p>
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-arrow-right-from-bracket"></i> Returning Pointers Safely</div>
+    <div class="code-block">
+<span class="type">int</span> *<span class="fn">bad_pointer</span>(<span class="kw">void</span>) {
+    <span class="type">int</span> local = <span class="num">10</span>;
+    <span class="kw">return</span> &amp;local;  <span class="cm">// Wrong: local stops existing when the function returns</span>
+}
+
+<span class="kw">void</span> <span class="fn">set_value</span>(<span class="type">int</span> *out) {
+    <span class="kw">if</span> (out != <span class="pp">NULL</span>) {
+        *out = <span class="num">10</span>;
+    }
+}
+    </div>
+  </div>
+  <div class="page-number">17</div>
+</section>
+<!-- PAGE 18: MEMORY MANAGEMENT -->
+<section id="page18" class="page page-light">
+  <div class="page-inner">
+    <div class="page-title"><span class="red">Memory</span> Management</div>
+    <div class="page-subtitle">heap &middot; malloc &middot; calloc &middot; realloc &middot; free</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-memory"></i> Automatic Memory vs. Dynamic Memory</div>
+    <table class="ref-table">
+      <tr><th>Storage</th><th>Example</th><th>Lifetime</th><th>Who Releases It?</th></tr>
+      <tr><td>Automatic / local</td><td><code>int score = 0;</code></td><td>Until its block or function ends</td><td>Compiler/runtime automatically</td></tr>
+      <tr><td>Dynamic / heap</td><td><code>int *scores = malloc(...);</code></td><td>Until <code>free</code> is called</td><td>Your program</td></tr>
+      <tr><td>Static / global</td><td><code>static int count;</code></td><td>Entire program execution</td><td>Runtime at program exit</td></tr>
+    </table>
+    <div class="note-box">
+      Use dynamic memory only when the required size is known at runtime, when data must outlive the current function, or when a large object should not live on the stack.
+    </div>
+
+    <div class="section-head"><i class="fas fa-box-open"></i> Allocating Memory: malloc and calloc</div>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>malloc</h4>
+        <p><ic>malloc(bytes)</ic> reserves a block of uninitialized memory. Read or write it only after you confirm that allocation succeeded.</p>
+      </div>
+      <div class="info-card">
+        <h4>calloc</h4>
+        <p><ic>calloc(count, size)</ic> reserves space for multiple elements and initializes all allocated bytes to zero.</p>
+      </div>
+    </div>
+    <div class="code-block">
+<span class="pp">#include</span> <span class="str">&lt;stdlib.h&gt;</span>
+
+<span class="type">size_t</span> count = <span class="num">5</span>;
+<span class="type">int</span> *scores = <span class="fn">malloc</span>(count * <span class="kw">sizeof</span> *scores);
+
+<span class="kw">if</span> (scores == <span class="pp">NULL</span>) {
+    <span class="cm">// Allocation failed: report, recover, or return an error.</span>
+} <span class="kw">else</span> {
+    scores[<span class="num">0</span>] = <span class="num">95</span>;  <span class="cm">// malloc memory is ready after initialization</span>
+}
+
+<span class="type">int</span> *zeros = <span class="fn">calloc</span>(count, <span class="kw">sizeof</span> *zeros);
+<span class="kw">if</span> (zeros != <span class="pp">NULL</span>) {
+    <span class="cm">// The allocated bytes start as zero.</span>
+}
+    </div>
+
+    <div class="section-head"><i class="fas fa-up-right-and-down-left-from-center"></i> Resizing Memory: realloc</div>
+    <div class="code-block">
+<span class="type">size_t</span> new_count = <span class="num">10</span>;
+<span class="type">int</span> *resized = <span class="fn">realloc</span>(scores, new_count * <span class="kw">sizeof</span> *scores);
+
+<span class="kw">if</span> (resized != <span class="pp">NULL</span>) {
+    scores = resized;  <span class="cm">// It may be the same address or a new address.</span>
+} <span class="kw">else</span> {
+    <span class="cm">// The original scores allocation is still valid here.</span>
+    <span class="cm">// Do not overwrite scores directly with realloc(...).</span>
+}
+    </div>
+    <div class="warn-box">
+      Never write <code>scores = realloc(scores, ...)</code> unless you can safely lose the original pointer on failure. Store the result in a temporary pointer first. Avoid using <code>realloc(ptr, 0)</code> as a free shortcut; call <code>free(ptr)</code> explicitly when releasing memory.
+    </div>
+
+    <div class="section-head"><i class="fas fa-trash-can"></i> Releasing Memory: free</div>
+    <div class="code-block">
+<span class="fn">free</span>(scores);       <span class="cm">// Release a valid allocation once.</span>
+scores = <span class="pp">NULL</span>;      <span class="cm">// Prevent accidental use through this pointer variable.</span>
+
+<span class="fn">free</span>(scores);       <span class="cm">// Safe: free(NULL) does nothing.</span>
+<span class="fn">free</span>(zeros);
+zeros = <span class="pp">NULL</span>;
+    </div>
+    <div class="note-box">
+      Only call <code>free</code> for pointers returned by memory-allocation functions such as <code>malloc</code>, <code>calloc</code>, or <code>realloc</code>. Do not free a local array, a string literal, or an interior pointer such as <code>scores + 1</code>.
+    </div>
+
+    <div class="section-head"><i class="fas fa-triangle-exclamation"></i> Common Memory-Management Bugs</div>
+    <table class="ref-table">
+      <tr><th>Bug</th><th>Example</th><th>Prevention</th></tr>
+      <tr><td>Memory leak</td><td>Allocation is no longer reachable and was never freed</td><td>Define who owns each allocation and free it once.</td></tr>
+      <tr><td>Double free</td><td>Calling <code>free</code> twice on the same allocation</td><td>Set the owner pointer to <code>NULL</code> after freeing; avoid duplicate owners.</td></tr>
+      <tr><td>Use after free</td><td>Dereferencing a pointer after <code>free</code></td><td>Do not use the pointer again; clear it and clear aliases when possible.</td></tr>
+      <tr><td>Invalid free</td><td>Freeing a stack variable or an interior address</td><td>Free only the original allocation pointer.</td></tr>
+      <tr><td>Unchecked allocation</td><td>Using a <code>NULL</code> result as if it were valid</td><td>Check the result before accessing the memory.</td></tr>
+      <tr><td>Size overflow</td><td><code>count * sizeof *scores</code> wraps before allocation</td><td>Validate large counts before multiplying.</td></tr>
+    </table>
+
+    <div class="section-head"><i class="fas fa-handshake"></i> Ownership Pattern</div>
+    <div class="code-block">
+<span class="type">int</span> *<span class="fn">create_scores</span>(<span class="type">size_t</span> count) {
+    <span class="type">int</span> *result = <span class="fn">calloc</span>(count, <span class="kw">sizeof</span> *result);
+
+    <span class="kw">if</span> (result == <span class="pp">NULL</span>) {
+        <span class="kw">return</span> <span class="pp">NULL</span>;
+    }
+
+    <span class="kw">return</span> result;  <span class="cm">// Caller becomes responsible for free(result).</span>
+}
+
+<span class="cm">// int *scores = create_scores(30);</span>
+<span class="cm">// ... use scores ...</span>
+<span class="cm">// free(scores);</span>
+    </div>
+  </div>
+  <div class="page-number">18</div>
+</section>
+<!-- PAGE 19: ADVANCED POINTERS -->
+<section id="page19" class="page page-light">
+  <div class="page-inner">
+    <div class="page-title"><span class="red">Advanced</span> Pointers</div>
+    <div class="page-subtitle">structs &middot; unions &middot; arrays &middot; functions &middot; callbacks</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-diagram-project"></i> Pointers to Structs</div>
+    <div class="code-block">
+<span class="kw">struct</span> <span class="type">Sensor</span> {
+    <span class="type">int</span> id;
+    <span class="type">float</span> temperature;
+};
+
+<span class="kw">struct</span> <span class="type">Sensor</span> room = { <span class="num">1</span>, <span class="num">24.5f</span> };
+<span class="kw">struct</span> <span class="type">Sensor</span> *sensor_ptr = &amp;room;
+
+sensor_ptr<span class="op">-&gt;</span>temperature = <span class="num">25.0f</span>;
+<span class="fn">printf</span>(<span class="str">"Sensor %d: %.1f\n"</span>, sensor_ptr<span class="op">-&gt;</span>id, sensor_ptr<span class="op">-&gt;</span>temperature);
+    </div>
+    <div class="note-box">
+      <code>ptr-&gt;member</code> is shorthand for <code>(*ptr).member</code>. Parentheses matter because the member-access operator <code>.</code> has higher precedence than unary <code>*</code>.
+    </div>
+
+    <div class="section-head"><i class="fas fa-list-ol"></i> Pointer Inside a Struct: Linked Nodes</div>
+    <div class="code-block">
+<span class="kw">struct</span> <span class="type">Node</span> {
+    <span class="type">int</span> value;
+    <span class="kw">struct</span> <span class="type">Node</span> *next;
+};
+
+<span class="kw">struct</span> <span class="type">Node</span> first = { <span class="num">10</span>, <span class="pp">NULL</span> };
+<span class="kw">struct</span> <span class="type">Node</span> second = { <span class="num">20</span>, <span class="pp">NULL</span> };
+
+first.next = &amp;second;
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, first.next<span class="op">-&gt;</span>value);  <span class="cm">// 20</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-object-group"></i> Pointers to Unions</div>
+    <div class="code-block">
+<span class="kw">union</span> <span class="type">Measurement</span> {
+    <span class="type">int</span> raw;
+    <span class="type">float</span> voltage;
+};
+
+<span class="kw">union</span> <span class="type">Measurement</span> reading;
+<span class="kw">union</span> <span class="type">Measurement</span> *reading_ptr = &amp;reading;
+
+reading_ptr<span class="op">-&gt;</span>voltage = <span class="num">3.3f</span>;
+<span class="fn">printf</span>(<span class="str">"%.1f\n"</span>, reading_ptr<span class="op">-&gt;</span>voltage);
+    </div>
+    <div class="warn-box">
+      A union stores one member representation at a time. For portable code, track which member was most recently written and read that member.
+    </div>
+
+    <div class="section-head"><i class="fas fa-grip-lines-vertical"></i> Pointer to Array vs. Array of Pointers</div>
+    <table class="ref-table">
+      <tr><th>Declaration</th><th>Meaning</th></tr>
+      <tr><td><code>int (*row_ptr)[4];</code></td><td>Pointer to one array containing 4 <code>int</code> values</td></tr>
+      <tr><td><code>int *rows[4];</code></td><td>Array containing 4 pointers to <code>int</code></td></tr>
+    </table>
+    <div class="code-block">
+<span class="type">int</span> row[<span class="num">4</span>] = { <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span> };
+<span class="type">int</span> (*row_ptr)[<span class="num">4</span>] = &amp;row;
+
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, (*row_ptr)[<span class="num">2</span>]);  <span class="cm">// 3</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-bolt"></i> Function Pointers</div>
+    <div class="code-block">
+<span class="type">int</span> <span class="fn">add</span>(<span class="type">int</span> a, <span class="type">int</span> b) {
+    <span class="kw">return</span> a + b;
+}
+
+<span class="type">int</span> <span class="fn">subtract</span>(<span class="type">int</span> a, <span class="type">int</span> b) {
+    <span class="kw">return</span> a - b;
+}
+
+<span class="type">int</span> (*operation)(<span class="type">int</span>, <span class="type">int</span>) = add;
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, operation(<span class="num">7</span>, <span class="num">2</span>));  <span class="cm">// 9</span>
+
+operation = subtract;
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, operation(<span class="num">7</span>, <span class="num">2</span>));  <span class="cm">// 5</span>
+    </div>
+
+    <div class="section-head"><i class="fas fa-gears"></i> Struct Holding Function Pointers: Callbacks</div>
+    <div class="code-block">
+<span class="kw">typedef</span> <span class="type">int</span> (*<span class="type">ReadFunction</span>)(<span class="kw">void</span>);
+
+<span class="kw">struct</span> <span class="type">Device</span> {
+    <span class="kw">const</span> <span class="type">char</span> *name;
+    <span class="kw">void</span> (*start)(<span class="kw">void</span>);
+    <span class="type">ReadFunction</span> read_value;
+};
+
+<span class="kw">void</span> <span class="fn">start_sensor</span>(<span class="kw">void</span>) {
+    <span class="fn">printf</span>(<span class="str">"Sensor started\n"</span>);
+}
+
+<span class="type">int</span> <span class="fn">read_sensor</span>(<span class="kw">void</span>) {
+    <span class="kw">return</span> <span class="num">42</span>;
+}
+
+<span class="kw">struct</span> <span class="type">Device</span> sensor = { <span class="str">"Temperature"</span>, start_sensor, read_sensor };
+<span class="kw">struct</span> <span class="type">Device</span> *device_ptr = &amp;sensor;
+
+device_ptr<span class="op">-&gt;</span>start();
+<span class="fn">printf</span>(<span class="str">"%s = %d\n"</span>, device_ptr<span class="op">-&gt;</span>name, device_ptr<span class="op">-&gt;</span>read_value());
+    </div>
+
+    <div class="section-head"><i class="fas fa-shuffle"></i> Advanced Qualifier: restrict</div>
+    <div class="code-block">
+<span class="cm">// Promise: these pointer-based accesses do not overlap during this call</span>
+<span class="kw">void</span> <span class="fn">add_arrays</span>(
+    <span class="type">size_t</span> count,
+    <span class="type">int</span> *<span class="kw">restrict</span> out,
+    <span class="kw">const</span> <span class="type">int</span> *<span class="kw">restrict</span> left,
+    <span class="kw">const</span> <span class="type">int</span> *<span class="kw">restrict</span> right
+) {
+    <span class="kw">for</span> (<span class="type">size_t</span> i = <span class="num">0</span>; i &lt; count; ++i) {
+        out[i] = left[i] + right[i];
+    }
+}
+    </div>
+    <div class="warn-box">
+      <code>restrict</code> is a contract, not a cast. Do not use it unless you can guarantee the relevant accessed arrays do not overlap; breaking that promise can produce undefined behavior.
+    </div>
+
+    <div class="section-head"><i class="fas fa-turn-up"></i> Pointer to a Function Pointer</div>
+    <div class="code-block">
+<span class="type">int</span> (*operation)(<span class="type">int</span>, <span class="type">int</span>) = add;
+<span class="type">int</span> (**operation_slot)(<span class="type">int</span>, <span class="type">int</span>) = &amp;operation;
+
+*operation_slot = subtract;
+<span class="fn">printf</span>(<span class="str">"%d\n"</span>, operation(<span class="num">9</span>, <span class="num">4</span>));  <span class="cm">// 5</span>
+    </div>
+    <div class="note-box">
+      Function pointers are commonly used for callbacks, menus, drivers, event handlers, and hardware abstraction layers. Call a function through a pointer only when the pointed-to function has a compatible signature.
+    </div>
+  </div>
+  <div class="page-number">19</div>
+</section>
+<!-- PAGE 20: FILE HANDLING -->
+<section id="page20" class="page page-light">
+  <div class="page-inner">
+    <div class="page-title"><span class="red">File</span> Handling</div>
+    <div class="page-subtitle">open &middot; read &middot; write &middot; position &middot; close</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-file-lines"></i> The FILE Pointer</div>
+    <div class="grid-2">
+      <div class="syntax-box">
+        <span class="syn-label">Header &amp; Type</span>
+        <code>#include &lt;stdio.h&gt;</code><br>
+        <code>FILE *file;</code>
+      </div>
+      <div class="note-box">
+        <code>FILE *</code> is a stream handle. It represents an open connection to a file, standard input/output, or another stream.
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-folder-open"></i> Opening a File — fopen</div>
+    <div class="syntax-box">
+      <span class="syn-label">Syntax</span>
+      <code>FILE *fopen(const char *filename, const char *mode);</code>
+    </div>
+    <div class="code-block">
+<span class="type">FILE</span> *file = <span class="fn">fopen</span>(<span class="str">"students.txt"</span>, <span class="str">"r"</span>);
+
+<span class="kw">if</span> (file == <span class="kw">NULL</span>) {
+    <span class="fn">perror</span>(<span class="str">"Could not open students.txt"</span>);
+    <span class="kw">return</span> <span class="num">1</span>;
+}
+
+<span class="cm">// Use the file here...</span>
+
+<span class="kw">if</span> (<span class="fn">fclose</span>(file) == <span class="type">EOF</span>) {
+    <span class="fn">perror</span>(<span class="str">"Could not close file"</span>);
+    <span class="kw">return</span> <span class="num">1</span>;
+}
+file = <span class="kw">NULL</span>;
+    </div>
+
+    <div class="section-head"><i class="fas fa-table-list"></i> File Modes</div>
+    <table class="ref-table">
+      <tr><th>Mode</th><th>Purpose</th><th>File Must Exist?</th><th>Existing Contents</th></tr>
+      <tr><td><code>"r"</code></td><td>Read only</td><td>Yes</td><td>Preserved</td></tr>
+      <tr><td><code>"w"</code></td><td>Write only</td><td>No — created if absent</td><td>Truncated to empty</td></tr>
+      <tr><td><code>"a"</code></td><td>Append only</td><td>No — created if absent</td><td>Preserved; writes go to end</td></tr>
+      <tr><td><code>"r+"</code></td><td>Read and write</td><td>Yes</td><td>Preserved</td></tr>
+      <tr><td><code>"w+"</code></td><td>Read and write</td><td>No — created if absent</td><td>Truncated to empty</td></tr>
+      <tr><td><code>"a+"</code></td><td>Read and append</td><td>No — created if absent</td><td>Preserved; writes go to end</td></tr>
+      <tr><td><code>"b"</code></td><td>Binary modifier</td><td>Combine with a mode</td><td>Example: <code>"rb"</code>, <code>"wb"</code>, <code>"ab+"</code></td></tr>
+    </table>
+    <div class="note-box">
+      Use <code>b</code> for binary data. It matters on systems that translate text newlines, especially Windows. In an update stream such as <code>"r+"</code>: after writing, call <code>fflush</code> or a positioning function before reading; after reading, call a positioning function before writing unless the read reached EOF.
+    </div>
+
+    <div class="section-head"><i class="fas fa-pen-to-square"></i> Writing Text Files</div>
+    <div class="grid-2">
+      <div class="code-block" style="font-size:12px;">
+<span class="type">FILE</span> *out = <span class="fn">fopen</span>(<span class="str">"report.txt"</span>, <span class="str">"w"</span>);
+<span class="kw">if</span> (out == <span class="kw">NULL</span>) {
+    <span class="fn">perror</span>(<span class="str">"fopen"</span>);
+    <span class="kw">return</span> <span class="num">1</span>;
+}
+
+<span class="fn">fprintf</span>(out, <span class="str">"Name: %s\nScore: %d\n"</span>, name, score);
+<span class="fn">fputs</span>(<span class="str">"Saved successfully\n"</span>, out);
+<span class="fn">fputc</span>(<span class="str">'!'</span>, out);
+
+<span class="fn">fclose</span>(out);
+      </div>
+      <div class="info-card">
+        <h4>Text Output Functions</h4>
+        <p><ic>fprintf</ic> writes formatted text.<br>
+        <ic>fputs</ic> writes a string without adding a newline.<br>
+        <ic>fputc</ic> writes one character.</p>
+        <p>Check the result of <ic>fclose</ic> after important output: buffered write errors may be reported only when the stream is closed.</p>
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-book-open"></i> Reading Text Files</div>
+    <div class="grid-2">
+      <div class="code-block" style="font-size:12px;">
+<span class="type">char</span> line[<span class="num">256</span>];
+<span class="type">FILE</span> *in = <span class="fn">fopen</span>(<span class="str">"report.txt"</span>, <span class="str">"r"</span>);
+
+<span class="kw">if</span> (in == <span class="kw">NULL</span>) {
+    <span class="fn">perror</span>(<span class="str">"fopen"</span>);
+    <span class="kw">return</span> <span class="num">1</span>;
+}
+
+<span class="kw">while</span> (<span class="fn">fgets</span>(line, <span class="kw">sizeof</span> line, in) != <span class="kw">NULL</span>) {
+    <span class="fn">printf</span>(<span class="str">"%s"</span>, line);
+}
+
+<span class="kw">if</span> (<span class="fn">ferror</span>(in)) {
+    <span class="fn">perror</span>(<span class="str">"Read error"</span>);
+}
+
+<span class="fn">fclose</span>(in);
+      </div>
+      <div class="info-card">
+        <h4>Text Input Functions</h4>
+        <p><ic>fgets</ic> reads up to <ic>size - 1</ic> characters and adds <ic>\0</ic>. It keeps the newline if one is read.</p>
+        <p><ic>fscanf</ic> reads formatted input. Use width limits for strings, for example <ic>%49s</ic>.</p>
+        <p><ic>fgetc</ic> returns an <strong>int</strong> so it can represent every unsigned character value and <ic>EOF</ic>.</p>
+      </div>
+    </div>
+
+    <div class="warn-box">
+      Do not write <code>while (!feof(file))</code>. The EOF indicator is set only <em>after</em> a read attempts to go past the end. Loop using the actual read result, such as <code>while (fgets(...))</code> or <code>while ((ch = fgetc(file)) != EOF)</code>.
+    </div>
+    <div class="note-box">
+      This section assumes hosted/desktop C with a file system. Bare-metal AVR programs usually use UART, EEPROM, flash, SD-card libraries, or host-side tools instead of standard disk files.
+    </div>
+  </div>
+  <div class="page-number">20</div>
+</section>
+<!-- PAGE 21: FILE HANDLING II -->
+<section id="page21" class="page page-dark">
+  <div class="page-inner">
+    <div class="page-title"><span class="gold">File</span> Handling II</div>
+    <div class="page-subtitle">binary data &middot; positioning &middot; errors &middot; file operations</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-hard-drive"></i> Binary Files — fread &amp; fwrite</div>
+    <div class="syntax-box">
+      <span class="syn-label">Syntax</span>
+      <code>size_t fread(void *ptr, size_t size, size_t count, FILE *stream);</code><br>
+      <code>size_t fwrite(const void *ptr, size_t size, size_t count, FILE *stream);</code>
+    </div>
+    <div class="code-block">
+<span class="kw">struct</span> <span class="type">Student</span> {
+    <span class="type">char</span> name[<span class="num">50</span>];
+    <span class="type">int</span> score;
+};
+
+<span class="kw">struct</span> <span class="type">Student</span> student = { <span class="str">"Mona"</span>, <span class="num">95</span> };
+<span class="type">FILE</span> *bin = <span class="fn">fopen</span>(<span class="str">"student.dat"</span>, <span class="str">"wb"</span>);
+
+<span class="kw">if</span> (bin != <span class="kw">NULL</span>) {
+    <span class="kw">if</span> (<span class="fn">fwrite</span>(&amp;student, <span class="kw">sizeof</span> student, <span class="num">1</span>, bin) != <span class="num">1</span>) {
+        <span class="fn">perror</span>(<span class="str">"fwrite"</span>);
+    }
+    <span class="fn">fclose</span>(bin);
+}
+
+<span class="cm">// Reading: fread(&amp;student, sizeof student, 1, bin)</span>
+    </div>
+    <div class="note-box">
+      <code>fread</code> and <code>fwrite</code> return the number of <em>elements</em> processed, not the number of bytes. Do not use raw struct dumps as a long-term portable file format: padding, byte order, pointer values, and type sizes can vary between builds and systems.
+    </div>
+
+    <div class="section-head"><i class="fas fa-location-crosshairs"></i> Moving the File Position</div>
+    <div class="code-block">
+<span class="type">FILE</span> *file = <span class="fn">fopen</span>(<span class="str">"report.bin"</span>, <span class="str">"rb"</span>);
+
+<span class="kw">if</span> (file == <span class="kw">NULL</span>) {
+    <span class="fn">perror</span>(<span class="str">"fopen"</span>);
+    <span class="kw">return</span> <span class="num">1</span>;
+}
+
+<span class="kw">if</span> (<span class="fn">fseek</span>(file, <span class="num">0</span>, <span class="pp">SEEK_END</span>) != <span class="num">0</span>) {
+    <span class="fn">perror</span>(<span class="str">"fseek"</span>);
+} <span class="kw">else</span> {
+    <span class="type">long</span> bytes = <span class="fn">ftell</span>(file);
+    <span class="kw">if</span> (bytes == -<span class="num">1L</span>) {
+        <span class="fn">perror</span>(<span class="str">"ftell"</span>);
+    }
+}
+
+<span class="fn">rewind</span>(file);                         <span class="cm">// Back to start; clears EOF/error flags</span>
+<span class="fn">fseek</span>(file, <span class="num">10</span>, <span class="pp">SEEK_SET</span>);       <span class="cm">// 10 bytes from beginning</span>
+<span class="fn">fseek</span>(file, -<span class="num">5</span>, <span class="pp">SEEK_END</span>);       <span class="cm">// 5 bytes before end (binary files)</span>
+
+<span class="fn">fclose</span>(file);
+    </div>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>Position Constants</h4>
+        <p><ic>SEEK_SET</ic> — beginning<br>
+        <ic>SEEK_CUR</ic> — current position<br>
+        <ic>SEEK_END</ic> — end of file</p>
+      </div>
+      <div class="info-card">
+        <h4>Positioning Notes</h4>
+        <p>For text streams, nonzero offsets with <ic>fseek</ic> are not fully portable. Use binary mode when you need byte-level positioning.</p>
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-triangle-exclamation"></i> Errors, Buffers &amp; Standard Streams</div>
+    <table class="ref-table">
+      <tr><th>Function / Stream</th><th>Purpose</th><th>Key Point</th></tr>
+      <tr><td><code>feof(file)</code></td><td>Tests EOF indicator</td><td>Use after a failed read, not as the loop condition</td></tr>
+      <tr><td><code>ferror(file)</code></td><td>Tests error indicator</td><td>Call after a failed read/write to distinguish errors</td></tr>
+      <tr><td><code>clearerr(file)</code></td><td>Clears EOF and error flags</td><td>Does not move the file position</td></tr>
+      <tr><td><code>fflush(file)</code></td><td>Flushes output buffer</td><td>Use on output streams; <code>fflush(stdin)</code> is undefined behavior in standard C</td></tr>
+      <tr><td><code>stdin</code></td><td>Standard input</td><td>Usually keyboard input</td></tr>
+      <tr><td><code>stdout</code></td><td>Standard output</td><td>Usually terminal output</td></tr>
+      <tr><td><code>stderr</code></td><td>Standard error output</td><td>Use for diagnostics, e.g. <code>fprintf(stderr, ...)</code></td></tr>
+    </table>
+
+    <div class="section-head"><i class="fas fa-file-circle-minus"></i> Rename and Remove</div>
+    <div class="code-block">
+<span class="kw">if</span> (<span class="fn">rename</span>(<span class="str">"draft.txt"</span>, <span class="str">"final.txt"</span>) != <span class="num">0</span>) {
+    <span class="fn">perror</span>(<span class="str">"rename"</span>);
+}
+
+<span class="kw">if</span> (<span class="fn">remove</span>(<span class="str">"temporary.txt"</span>) != <span class="num">0</span>) {
+    <span class="fn">perror</span>(<span class="str">"remove"</span>);
+}
+    </div>
+
+    <div class="warn-box">
+      Always close every file you successfully open. A missing <code>fclose</code> can lose buffered output, leak operating-system handles, and lock files on some systems.
+    </div>
+  </div>
+  <div class="page-number">21</div>
+</section>
+<!-- PAGE 22: DEBUGGING & LOGGING -->
+<section id="page22" class="page page-light">
+  <div class="page-inner">
+    <div class="page-title"><span class="red">Debugging</span> &amp; Logging</div>
+    <div class="page-subtitle">source locations &middot; trace output &middot; assertions &middot; diagnostics</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-bug"></i> Debugging Mindset</div>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>Observe First</h4>
+        <p>Make the failure repeatable, record inputs and environment details, then add the smallest useful amount of logging around the suspicious code path.</p>
+      </div>
+      <div class="info-card">
+        <h4>Log to stderr</h4>
+        <p>Use <ic>stderr</ic> for diagnostics so normal program output on <ic>stdout</ic> can still be redirected or processed independently.</p>
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-location-dot"></i> Built-In Source Information</div>
+    <table class="ref-table">
+      <tr><th>Name</th><th>What It Gives You</th><th>Use</th></tr>
+      <tr><td><code>__FILE__</code></td><td>Current source-file name</td><td>Point a message to the relevant file</td></tr>
+      <tr><td><code>__LINE__</code></td><td>Current source-line number</td><td>Find the exact logging call or assertion</td></tr>
+      <tr><td><code>__DATE__</code></td><td>Compilation date string</td><td>Build identification</td></tr>
+      <tr><td><code>__TIME__</code></td><td>Compilation time string</td><td>Build identification</td></tr>
+      <tr><td><code>__func__</code></td><td>Name of the current function</td><td>Show where a log originated</td></tr>
+    </table>
+    <div class="note-box">
+      <code>__FILE__</code>, <code>__LINE__</code>, <code>__DATE__</code>, and <code>__TIME__</code> are predefined macros. <code>__func__</code> is a predefined identifier introduced in C99, not a preprocessor macro. Use it inside a function.
+    </div>
+
+    <div class="section-head"><i class="fas fa-list-check"></i> Reusable Logging Macros</div>
+    <div class="code-block">
+<span class="pp">#include</span> <span class="str">&lt;stdarg.h&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="kw">static void</span> <span class="fn">log_message</span>(
+    <span class="kw">const</span> <span class="type">char</span> *level,
+    <span class="kw">const</span> <span class="type">char</span> *file,
+    <span class="type">int</span> line,
+    <span class="kw">const</span> <span class="type">char</span> *func,
+    <span class="kw">const</span> <span class="type">char</span> *format,
+    ...
+) {
+    <span class="type">va_list</span> args;
+
+    <span class="fn">fprintf</span>(stderr, <span class="str">"[%s] %s:%d %s(): "</span>, level, file, line, func);
+    <span class="fn">va_start</span>(args, format);
+    <span class="fn">vfprintf</span>(stderr, format, args);
+    <span class="fn">va_end</span>(args);
+    <span class="fn">fputc</span>(<span class="str">'\n'</span>, stderr);
+}
+
+<span class="pp">#define</span> <span class="fn">LOG_ERROR(...)</span> \
+    <span class="fn">log_message</span>(<span class="str">"ERROR"</span>, __FILE__, __LINE__, __func__, __VA_ARGS__)
+
+<span class="pp">#define</span> <span class="fn">LOG_WARN(...)</span> \
+    <span class="fn">log_message</span>(<span class="str">"WARN"</span>, __FILE__, __LINE__, __func__, __VA_ARGS__)
+
+<span class="pp">#define</span> <span class="fn">LOG_INFO(...)</span> \
+    <span class="fn">log_message</span>(<span class="str">"INFO"</span>, __FILE__, __LINE__, __func__, __VA_ARGS__)
+
+<span class="pp">#ifdef</span> <span class="pp">DEBUG</span>
+<span class="pp">#define</span> <span class="fn">LOG_DEBUG(...)</span> \
+    <span class="fn">log_message</span>(<span class="str">"DEBUG"</span>, __FILE__, __LINE__, __func__, __VA_ARGS__)
+<span class="pp">#else</span>
+<span class="pp">#define</span> <span class="fn">LOG_DEBUG(...)</span> ((<span class="kw">void</span>)<span class="num">0</span>)
+<span class="pp">#endif</span>
+    </div>
+    <div class="code-block">
+<span class="fn">LOG_INFO</span>(<span class="str">"Starting application; build: %s %s"</span>, __DATE__, __TIME__);
+<span class="fn">LOG_DEBUG</span>(<span class="str">"index=%d, capacity=%zu"</span>, index, capacity);
+<span class="fn">LOG_WARN</span>(<span class="str">"Retrying connection: attempt %d"</span>, attempt);
+<span class="fn">LOG_ERROR</span>(<span class="str">"Could not open configuration file"</span>);
+    </div>
+
+    <div class="note-box">
+      In release builds, the disabled <code>LOG_DEBUG(...)</code> macro does not evaluate its arguments. Do not put side effects such as <code>i++</code>, function calls that change state, or cleanup work inside debug-only logging arguments.
+    </div>
+
+    <div class="section-head"><i class="fas fa-triangle-exclamation"></i> Assertions, errno &amp; Error Messages</div>
+    <div class="grid-2">
+      <div>
+        <div class="code-block">
+<span class="pp">#include</span> <span class="str">&lt;assert.h&gt;</span>
+
+<span class="kw">void</span> <span class="fn">set_value</span>(<span class="type">int</span> *ptr, <span class="type">int</span> value) {
+    <span class="fn">assert</span>(ptr != <span class="kw">NULL</span>);
+    *ptr = value;
+}
+
+<span class="cm">// Define NDEBUG before &lt;assert.h&gt; to disable assert.</span>
+        </div>
+      </div>
+      <div>
+        <div class="code-block">
+<span class="pp">#include</span> <span class="str">&lt;errno.h&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;string.h&gt;</span>
+
+<span class="type">FILE</span> *file = <span class="fn">fopen</span>(<span class="str">"config.txt"</span>, <span class="str">"r"</span>);
+
+<span class="kw">if</span> (file == <span class="kw">NULL</span>) {
+    <span class="fn">LOG_ERROR</span>(<span class="str">"fopen failed: %s"</span>, <span class="fn">strerror</span>(errno));
+    <span class="fn">perror</span>(<span class="str">"config.txt"</span>);
+}
+        </div>
+      </div>
+    </div>
+    <div class="warn-box">
+      Use <code>assert</code> for programmer assumptions that should never be false, not for recoverable user-input or runtime failures. Never log passwords, tokens, private data, or sensitive memory contents.
+    </div>
+  </div>
+  <div class="page-number">22</div>
+</section>
+<!-- PAGE 23: DEBUG TOOLS & WORKFLOW -->
+<section id="page23" class="page page-dark">
+  <div class="page-inner">
+    <div class="page-title"><span class="gold">Debug</span> Tools</div>
+    <div class="page-subtitle">warnings &middot; sanitizers &middot; gdb &middot; reproducible failures</div>
+    <div class="divider"></div>
+
+    <div class="section-head"><i class="fas fa-hammer"></i> Build for Debugging</div>
+    <div class="code-block">
+<span class="cm">// GCC / Clang-style development build</span>
+gcc -std=c11 -g3 -O0 -Wall -Wextra -Wpedantic \
+    -Wshadow -Wconversion -Wformat=2 -DDEBUG app.c -o app
+
+<span class="cm">// Host-machine memory and undefined-behavior checks</span>
+gcc -std=c11 -g3 -O1 -fno-omit-frame-pointer \
+    -fsanitize=address,undefined app.c -o app_san
+    </div>
+    <div class="note-box">
+      Treat warnings as design feedback. Fix the cause rather than hiding a warning. AddressSanitizer and UndefinedBehaviorSanitizer are especially useful when testing a desktop/host build; they may not be available on small embedded targets.
+    </div>
+    <div class="note-box">
+      The commands below assume a hosted executable. For AVR or other bare-metal targets, use a target-aware debugger or simulator when available, plus serial logging and hardware probes; sanitizers normally run on a host build rather than on the microcontroller.
+    </div>
+
+    <div class="section-head"><i class="fas fa-stethoscope"></i> GDB Essentials</div>
+    <table class="ref-table">
+      <tr><th>Command</th><th>Purpose</th></tr>
+      <tr><td><code>gdb ./app</code></td><td>Start GDB with the program</td></tr>
+      <tr><td><code>break main</code> or <code>b main</code></td><td>Stop when <code>main</code> begins</td></tr>
+      <tr><td><code>run</code> or <code>r</code></td><td>Start the program</td></tr>
+      <tr><td><code>next</code> or <code>n</code></td><td>Step over the next source line</td></tr>
+      <tr><td><code>step</code> or <code>s</code></td><td>Step into a function call</td></tr>
+      <tr><td><code>print variable</code> or <code>p variable</code></td><td>Inspect an expression</td></tr>
+      <tr><td><code>info locals</code></td><td>Show local variables in the current frame</td></tr>
+      <tr><td><code>backtrace</code> or <code>bt</code></td><td>Show the current call stack</td></tr>
+      <tr><td><code>watch counter</code></td><td>Stop when an expression changes</td></tr>
+      <tr><td><code>continue</code> or <code>c</code></td><td>Resume execution</td></tr>
+    </table>
+
+    <div class="section-head"><i class="fas fa-code-branch"></i> Conditional Breakpoints &amp; Watchpoints</div>
+    <div class="code-block">
+<span class="cm">// Stop only when the suspicious condition occurs</span>
+(gdb) <span class="fn">break</span> process_item <span class="kw">if</span> index == <span class="num">37</span>
+
+<span class="cm">// Stop at a particular source line</span>
+(gdb) <span class="fn">break</span> main.c:<span class="num">42</span>
+
+<span class="cm">// Stop when a value changes — useful for unexpected corruption</span>
+(gdb) <span class="fn">watch</span> total
+
+<span class="cm">// When the program crashes</span>
+(gdb) <span class="fn">backtrace</span>
+(gdb) <span class="fn">frame</span> <span class="num">0</span>
+(gdb) <span class="fn">info</span> locals
+    </div>
+
+    <div class="section-head"><i class="fas fa-clipboard-check"></i> Advanced Debugging Checklist</div>
+    <div class="grid-2">
+      <div class="info-card">
+        <h4>Before Changing Code</h4>
+        <p>1. Capture the failing input.<br>2. Record build flags and target.<br>3. Reduce the failure to a minimal case.<br>4. Read warnings and the first sanitizer report.</p>
+      </div>
+      <div class="info-card">
+        <h4>When Inspecting Logs</h4>
+        <p>Include a level, source location, key state, and error code. Prefer structured, short messages that explain the event and actual values.</p>
+      </div>
+    </div>
+
+    <div class="warn-box">
+      Avoid relying on a debug print that changes timing or memory layout to “fix” the bug. Heisenbugs often need a breakpoint, watchpoint, trace buffer, or sanitizer instead of extra output.
+    </div>
+  </div>
+  <div class="page-number">23</div>
+</section>
+<!-- PAGE 24: QUICK REFERENCE / CHEAT SHEET -->
+<section id="page24" class="page page-red">
+  <div class="page-inner">
+    <div class="page-title" style="font-size:clamp(28px,5vw,48px);"><span class="gold">Quick</span> Reference</div>
+    <div class="page-subtitle">everything at a glance</div>
+    <div class="divider" style="background:linear-gradient(90deg, var(--gold), transparent);"></div>
+
+    <div class="grid-2" style="gap:24px;">
+      <!-- Col 1 -->
+      <div>
+        <div class="section-head" style="border-bottom-color:rgba(212,175,55,0.3);"><i class="fas fa-keyboard"></i> Essential I/O</div>
+        <div class="code-block" style="font-size:11px;line-height:1.6;">
+<span class="fn">printf</span>(<span class="str">"Age: %d\n"</span>, age); <span class="cm">// Formatted output</span>
+<span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;age);          <span class="cm">// Formatted input</span>
+<span class="fn">putchar</span>(<span class="str">'A'</span>);                <span class="cm">// Output single char</span>
+<span class="fn">getchar</span>();                    <span class="cm">// Read single char</span>
+<span class="fn">puts</span>(<span class="str">"text"</span>);               <span class="cm">// Output string + \n</span>
+<span class="cm">// gets(buf);                  // Removed in C11 — never use</span>
+<span class="fn">fgets</span>(buf, n, stdin);         <span class="cm">// Safer line input with size limit</span>
+        </div>
+
+        <div class="section-head" style="border-bottom-color:rgba(212,175,55,0.3);"><i class="fas fa-file"></i> Common Headers</div>
+        <div class="code-block" style="font-size:11px;line-height:1.6;">
+<span class="pp">&lt;stdio.h&gt;</span>   I/O functions
+<span class="pp">&lt;stdlib.h&gt;</span>  malloc, free, atoi, exit, abs
+<span class="pp">&lt;string.h&gt;</span>  String operations
+<span class="pp">&lt;math.h&gt;</span>    sqrt, pow, sin, cos, fabs
+<span class="pp">&lt;ctype.h&gt;</span>   isalpha, isdigit, toupper
+<span class="pp">&lt;stdbool.h&gt;</span> bool, true, false (C99)
+<span class="pp">&lt;stdint.h&gt;</span>  int32_t, uint64_t, etc.
+<span class="pp">&lt;assert.h&gt;</span>  assert(condition)
+<span class="pp">&lt;errno.h&gt;</span>   errno variable
+<span class="pp">&lt;time.h&gt;</span>    time(), clock()
+        </div>
+
+        <div class="section-head" style="border-bottom-color:rgba(212,175,55,0.3);"><i class="fas fa-memory"></i> Dynamic Memory</div>
+        <div class="code-block" style="font-size:11px;line-height:1.6;">
+<span class="type">int</span> *p = <span class="fn">malloc</span>(n * <span class="kw">sizeof</span> *p);  <span class="cm">// Allocate</span>
+<span class="type">int</span> *q = <span class="fn">calloc</span>(n, <span class="kw">sizeof</span> *q);  <span class="cm">// Allocate + zeroed bytes</span>
+
+<span class="type">int</span> *tmp = <span class="fn">realloc</span>(p, new_n * <span class="kw">sizeof</span> *p); <span class="cm">// Resize safely</span>
+<span class="kw">if</span> (tmp != <span class="kw">NULL</span>) {
+    p = tmp;
+}
+
+<span class="fn">free</span>(p);   <span class="cm">// Release memory once</span>
+p = <span class="kw">NULL</span>;   <span class="cm">// Clear this owner pointer</span>
+
+<span class="cm">// Always check malloc/calloc/realloc return values before use.</span>
+        </div>
+      </div>
+
+      <!-- Col 2 -->
+      <div>
+        <div class="section-head" style="border-bottom-color:rgba(212,175,55,0.3);"><i class="fas fa-exclamation-circle"></i> Common Pitfalls</div>
+        <div class="code-block" style="font-size:11px;line-height:1.6;">
+<span class="cm">// 1. Array out of bounds</span>
+arr[<span class="num">5</span>] = <span class="num">0</span>;  <span class="cm">// arr only has 5 elements [0..4]</span>
+
+<span class="cm">// 2. Using = instead of ==</span>
+<span class="kw">if</span> (x = <span class="num">5</span>)  <span class="cm">// Always true! Assigns 5 to x</span>
+
+<span class="cm">// 3. Dangling pointer</span>
+<span class="type">int</span> *p = <span class="fn">malloc</span>(<span class="kw">sizeof</span>(<span class="type">int</span>));
+<span class="fn">free</span>(p);
+*p = <span class="num">42</span>;  <span class="cm">// UB: using freed memory</span>
+
+<span class="cm">// 4. Memory leak</span>
+p = <span class="fn">malloc</span>(<span class="num">100</span>);
+p = <span class="fn">malloc</span>(<span class="num">200</span>); <span class="cm">// First block leaked!</span>
+
+<span class="cm">// 5. Off-by-one in loops</span>
+<span class="kw">for</span> (i=<span class="num">0</span>; i<=n; i++) <span class="cm">// Should be i &lt; n</span>
+
+<span class="cm">// 6. Uninitialized variables</span>
+<span class="type">int</span> x;
+<span class="fn">printf</span>(<span class="str">"%d"</span>, x);  <span class="cm">// Garbage value</span>
+
+<span class="cm">// 7. scanf without &</span>
+<span class="fn">scanf</span>(<span class="str">"%d"</span>, x); <span class="cm">// Missing & → UB</span>
+        </div>
+
+        <div class="section-head" style="border-bottom-color:rgba(212,175,55,0.3);"><i class="fas fa-bolt"></i> Pointer Quick Ref</div>
+        <div class="code-block" style="font-size:11px;line-height:1.6;">
+<span class="type">int</span> x = <span class="num">10</span>;
+<span class="type">int</span> *p = &amp;x;     <span class="cm">// p holds address of x</span>
+*p = <span class="num">20</span>;           <span class="cm">// x is now 20 (dereference)</span>
+<span class="type">int</span> **pp = &amp;p;    <span class="cm">// Pointer to pointer</span>
+
+<span class="cm">// Pointer arithmetic within an array</span>
+<span class="type">int</span> values[] = { <span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span> };
+<span class="type">int</span> *array_ptr = values;
+<span class="type">int</span> *next = array_ptr + <span class="num">1</span>;  <span class="cm">// points to values[1]</span>
+<span class="type">int</span> element = *(array_ptr + <span class="num">2</span>); <span class="cm">// same as values[2]</span>
+
+<span class="cm">// Null pointer</span>
+<span class="type">int</span> *np = <span class="kw">NULL</span>;  <span class="cm">// Does not point to an object; check before dereference</span>
+
+<span class="cm">// void pointer (generic)</span>
+<span class="kw">void</span> *vp = &amp;x;    <span class="cm">// Can point to any object type</span>
+<span class="type">int</span> *ip = vp;      <span class="cm">// Convert to object pointer before dereference</span>
+        </div>
+
+        <div class="section-head" style="border-bottom-color:rgba(212,175,55,0.3);"><i class="fas fa-flag"></i> C99/C11 Key Additions</div>
+        <div class="code-block" style="font-size:11px;line-height:1.6;">
+<span class="cm">// C99:</span>
+<span class="kw">bool</span> b = <span class="kw">true</span>;        <span class="cm">// &lt;stdbool.h&gt;</span>
+<span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; count; ++i) { } <span class="cm">// Loop variable scoped to loop</span>
+<span class="kw">struct</span> S s = { .x = <span class="num">1</span> }; <span class="cm">// Designated initializer</span>
+<span class="type">int32_t</span> signed_value = <span class="num">0</span>; <span class="type">uint64_t</span> big_value = <span class="num">0</span>; <span class="cm">// &lt;stdint.h&gt;</span>
+<span class="kw">_Bool</span> ready = <span class="num">1</span>; <span class="type">double</span> <span class="kw">_Complex</span> z = <span class="num">0.0</span>; <span class="cm">// &lt;complex.h&gt; for complex helpers</span>
+<span class="type">int</span> *<span class="kw">restrict</span> data = values; <span class="cm">// Aliasing contract</span>
+<span class="kw">static inline</span> <span class="type">int</span> <span class="fn">square</span>(<span class="type">int</span> n) { <span class="kw">return</span> n * n; }
+
+<span class="cm">// C11:</span>
+<span class="kw">_Static_assert</span>(<span class="kw">sizeof</span>(<span class="type">int</span>) &gt;= <span class="num">2</span>, <span class="str">"int too small"</span>); <span class="cm">// Static assertion</span>
+<span class="type">size_t</span> alignment = <span class="kw">_Alignof</span>(<span class="type">int</span>); <span class="cm">// alignof macro is in &lt;stdalign.h&gt;</span>
+<span class="kw">_Atomic</span> <span class="type">int</span> atomic_count = <span class="num">0</span>; <span class="cm">// Atomic object</span>
+<span class="kw">_Thread_local</span> <span class="type">int</span> thread_id; <span class="cm">// Thread-local storage</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:40px;padding:30px;border:1px solid rgba(212,175,55,0.3);border-radius:8px;">
+      <div style="font-family:'Oswald',sans-serif;font-size:24px;color:var(--gold);letter-spacing:4px;text-transform:uppercase;">End of Cheat Sheet</div>
+      <div style="font-size:12px;color:var(--white-dim);margin-top:10px;letter-spacing:2px;">AMIT Learning — C Programming Complete Reference Booklet</div>
+      <div style="margin-top:16px;display:flex;justify-content:center;gap:16px;">
+        <span class="badge badge-gold">25 Pages</span>
+        <span class="badge badge-gold">24 Topics</span>
+        <span class="badge badge-gold">1 Language</span>
+      </div>
+    </div>
+  </div>
+  <div class="page-number">24</div>
+</section>
+<script>
+  // Active nav link highlighting on scroll
+  const navLinks = document.querySelectorAll('.nav-link');
+  const pages = document.querySelectorAll('.page');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '-20% 0px -60% 0px',
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(link => {
+          link.style.color = link.getAttribute('href') === '#' + id ? '#D4AF37' : '';
+          link.style.borderColor = link.getAttribute('href') === '#' + id ? '#A08520' : 'transparent';
+          link.style.background = link.getAttribute('href') === '#' + id ? 'rgba(212,175,55,0.08)' : '';
+        });
+      }
+    });
+  }, observerOptions);
+
+  pages.forEach(page => observer.observe(page));
+
+  // Subtle parallax on decorative elements
+  document.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 10;
+    const y = (e.clientY / window.innerHeight - 0.5) * 10;
+    document.querySelectorAll('.corner-deco').forEach((el, i) => {
+      const factor = (i + 1) * 0.3;
+      el.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+    });
+  });
+</script>
+
+</body>
+</html>
