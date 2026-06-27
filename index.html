@@ -680,6 +680,86 @@
     }
   }
 
+
+
+  /* C memory-layout diagram */
+  .memory-layout-note {
+    background: rgba(212,175,55,0.08);
+    border: 1px solid var(--gold-dim);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0 18px;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+  .memory-map {
+    border: 1px solid var(--code-border);
+    background: var(--black-light);
+    border-radius: 9px;
+    padding: 14px;
+    margin: 12px 0 20px;
+  }
+  .memory-map-title {
+    font-family: 'Oswald', sans-serif;
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .memory-direction {
+    display: flex;
+    justify-content: space-between;
+    color: var(--gold-dim);
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 2px 4px 8px;
+  }
+  .memory-column {
+    display: grid;
+    gap: 6px;
+  }
+  .memory-segment {
+    border-radius: 5px;
+    padding: 9px 12px;
+    border: 1px solid rgba(245,240,232,0.14);
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 12px;
+    align-items: center;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .memory-segment strong {
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 1px;
+    font-size: 13px;
+    text-transform: uppercase;
+  }
+  .mem-stack { background: rgba(196,30,58,0.14); border-left: 4px solid var(--red); }
+  .mem-gap { background: rgba(255,255,255,0.025); border-style: dashed; color: var(--white-dim); }
+  .mem-heap { background: rgba(212,175,55,0.12); border-left: 4px solid var(--gold); }
+  .mem-bss { background: rgba(86,182,194,0.12); border-left: 4px solid #56B6C2; }
+  .mem-data { background: rgba(152,195,121,0.12); border-left: 4px solid #98C379; }
+  .mem-rodata { background: rgba(198,120,221,0.12); border-left: 4px solid #C678DD; }
+  .mem-text { background: rgba(209,154,102,0.12); border-left: 4px solid #D19A66; }
+  .memory-arrow-up, .memory-arrow-down {
+    color: var(--gold-light);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .avrtwo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .memory-map .label-tag { display:block; margin-top:3px; }
+  @media (max-width: 768px) {
+    .memory-segment { grid-template-columns: 1fr; gap: 4px; }
+    .avrtwo { grid-template-columns: 1fr; }
+  }
+
 </style>
 </head>
 <body>
@@ -710,15 +790,16 @@
   <a href="#page13" class="nav-link">Structs</a>
   <a href="#page14" class="nav-link">Enums/Unions</a>
   <a href="#page15" class="nav-link">Preprocessor</a>
-  <a href="#page16" class="nav-link">Pointers</a>
-  <a href="#page17" class="nav-link">Ptr Safety</a>
-  <a href="#page18" class="nav-link">Memory</a>
-  <a href="#page19" class="nav-link">Adv. Pointers</a>
-  <a href="#page20" class="nav-link">Files I</a>
-  <a href="#page21" class="nav-link">Files II</a>
-  <a href="#page22" class="nav-link">Logging</a>
-  <a href="#page23" class="nav-link">Debug Tools</a>
-  <a href="#page24" class="nav-link">Quick Ref</a>
+  <a href="#page16" class="nav-link">Memory Layout</a>
+  <a href="#page17" class="nav-link">Pointers</a>
+  <a href="#page18" class="nav-link">Ptr Safety</a>
+  <a href="#page19" class="nav-link">Memory</a>
+  <a href="#page20" class="nav-link">Adv. Pointers</a>
+  <a href="#page21" class="nav-link">Files I</a>
+  <a href="#page22" class="nav-link">Files II</a>
+  <a href="#page23" class="nav-link">Logging</a>
+  <a href="#page24" class="nav-link">Debug Tools</a>
+  <a href="#page25" class="nav-link">Quick Ref</a>
 </nav>
 <!-- PAGE 0: COVER -->
 <section id="page0" class="page page-dark" style="display:flex;align-items:center;justify-content:center;">
@@ -742,7 +823,7 @@
     <div class="cover-desc" style="margin:0 auto;text-align:center;">
       The Complete Cheat Sheet Booklet<br>
       Every keyword, every syntax, every rule — condensed into one reference.<br><br><span style="font-size:10px;color:var(--white-dim);">© 2026 AMIT Learning · All Rights Reserved · Made by Abdelrahman Selim</span><br><br>
-      <span style="color:var(--gold);">24 Topics &middot; 25 Pages &middot; 1 Language</span>
+      <span style="color:var(--gold);">25 Topics &middot; 26 Pages &middot; 1 Language</span>
     </div>
   </div>
 
@@ -809,7 +890,6 @@ gcc -std=c11 -Wall -Wextra hello.c -o hello
   <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">1</div>
 </section>
-
 <!-- PAGE 2: COMMENTS & ESCAPE SEQUENCES -->
 <section id="page2" class="page page-light">
   <div class="page-inner">
@@ -2019,8 +2099,104 @@ v.value.fval = <span class="num">3.14f</span>;
   <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">15</div>
 </section>
-<!-- PAGE 16: POINTER FUNDAMENTALS -->
-<section id="page16" class="page page-light">
+<!-- PAGE 16: C MEMORY LAYOUT -->
+<section id="page16" class="page page-dark">
+  <div class="page-inner">
+    <div class="page-title"><span class="gold">C Memory</span> Layout</div>
+    <div class="page-subtitle">sections &middot; lifetimes &middot; stack &middot; heap &middot; avr</div>
+    <div class="divider"></div>
+
+    <div class="memory-layout-note">
+      <strong>Important:</strong> the C language defines storage duration and object lifetime, but it does <em>not</em> require one universal physical memory map. Names such as <code>.text</code>, <code>.data</code>, <code>.bss</code>, heap, and stack describe a common compiler/linker/runtime model. Exact placement depends on the target, linker script, operating system, compiler, and build options.
+    </div>
+
+    <div class="section-head"><i class="fas fa-layer-group"></i> Typical Hosted C Program Layout</div>
+    <div class="memory-map">
+      <div class="memory-map-title">Illustrative process layout — not to scale</div>
+      <div class="memory-direction"><span>Higher addresses</span><span>Lower addresses</span></div>
+      <div class="memory-column">
+        <div class="memory-segment mem-stack"><strong>Stack <span class="memory-arrow-down">↓ often grows down</span></strong><span>Function-call frames, automatic local variables, parameters, return addresses, and temporary storage. Released automatically when a function or block ends.</span></div>
+        <div class="memory-segment mem-gap"><strong>Free / Gap</strong><span>In many systems, the heap and stack may grow toward one another. A collision can cause memory corruption or a crash.</span></div>
+        <div class="memory-segment mem-heap"><strong>Heap <span class="memory-arrow-up">↑ often grows up</span></strong><span>Dynamic storage requested by <code>malloc</code>, <code>calloc</code>, or <code>realloc</code>. It stays allocated until <code>free</code> is called.</span></div>
+        <div class="memory-segment mem-bss"><strong>.bss</strong><span>Uninitialized or zero-initialized global/static objects. The startup code normally clears this region before <code>main</code>.</span></div>
+        <div class="memory-segment mem-data"><strong>.data</strong><span>Initialized global/static objects. Their initial values are stored in the program image, then made available in writable runtime memory.</span></div>
+        <div class="memory-segment mem-rodata"><strong>.rodata</strong><span>Read-only constants and string literals on many toolchains. Its location is implementation-specific.</span></div>
+        <div class="memory-segment mem-text"><strong>.text</strong><span>Compiled machine instructions. On many embedded targets, code executes from non-volatile program memory.</span></div>
+      </div>
+    </div>
+
+    <div class="section-head"><i class="fas fa-code"></i> Where Variables Commonly Go</div>
+    <div class="code-block">
+<span class="pp">#include</span> <span class="str">&lt;stdlib.h&gt;</span>
+
+<span class="kw">const</span> <span class="type">char</span> banner[] = <span class="str">"AMIT"</span>;  <span class="cm">// typically .rodata / program memory</span>
+<span class="type">int</span> mode = <span class="num">1</span>;                <span class="cm">// typically .data</span>
+<span class="kw">static</span> <span class="type">int</span> total;             <span class="cm">// typically .bss (zero-initialized)</span>
+
+<span class="kw">void</span> <span class="fn">process</span>(<span class="kw">void</span>) {
+    <span class="type">int</span> local = <span class="num">5</span>;         <span class="cm">// automatic storage; typically stack</span>
+    <span class="type">int</span> *buffer = <span class="fn">malloc</span>(<span class="num">8</span> * <span class="kw">sizeof</span> *buffer); <span class="cm">// allocated storage; typically heap</span>
+
+    <span class="kw">if</span> (buffer != <span class="kw">NULL</span>) {
+        buffer[<span class="num">0</span>] = local;
+        <span class="fn">free</span>(buffer);
+    }
+}
+    </div>
+
+    <div class="section-head"><i class="fas fa-clock"></i> Storage Duration vs. Typical Location</div>
+    <table class="ref-table">
+      <tr><th>Object kind</th><th>Example</th><th>Lifetime</th><th>Typical mapping</th></tr>
+      <tr><td>Automatic</td><td><code>int local;</code> inside a function</td><td>Until its block/function exits</td><td>Stack</td></tr>
+      <tr><td>Static</td><td>Global variables and <code>static</code> locals</td><td>Entire program execution</td><td><code>.data</code> or <code>.bss</code></td></tr>
+      <tr><td>Allocated</td><td><code>malloc(...)</code></td><td>Until <code>free</code></td><td>Heap</td></tr>
+      <tr><td>Thread</td><td><code>_Thread_local</code> object</td><td>One instance per thread</td><td>Thread-local storage, where supported</td></tr>
+    </table>
+
+    <div class="section-head"><i class="fas fa-microchip"></i> AVR / Bare-Metal View</div>
+    <div class="avrtwo">
+      <div class="memory-map">
+        <div class="memory-map-title">Program Memory — Flash</div>
+        <div class="memory-column">
+          <div class="memory-segment mem-text"><strong>.text</strong><span>Program instructions and interrupt vectors.</span></div>
+          <div class="memory-segment mem-rodata"><strong>Read-only data</strong><span>Often string literals and constant tables, depending on the toolchain and declarations.</span></div>
+          <div class="memory-segment mem-data"><strong>.data image</strong><span>Initial bytes for initialized SRAM variables; startup code copies them into SRAM.</span></div>
+        </div>
+      </div>
+      <div class="memory-map">
+        <div class="memory-map-title">Data Memory — SRAM</div>
+        <div class="memory-column">
+          <div class="memory-segment mem-data"><strong>.data</strong><span>Initialized global/static variables after startup copy.</span></div>
+          <div class="memory-segment mem-bss"><strong>.bss</strong><span>Zero-initialized global/static variables after startup clearing.</span></div>
+          <div class="memory-segment mem-heap"><strong>Heap <span class="memory-arrow-up">↑ optional</span></strong><span>Dynamic allocation area, normally placed after <code>.bss</code> if <code>malloc</code> is used.</span></div>
+          <div class="memory-segment mem-gap"><strong>Free SRAM</strong><span>Available margin between heap and stack. Monitor it carefully on small devices.</span></div>
+          <div class="memory-segment mem-stack"><strong>Stack <span class="memory-arrow-down">↓ from top of SRAM</span></strong><span>Calls, local automatic variables, and interrupt context. It normally starts near the top of internal SRAM.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-box">
+      AVR uses Harvard architecture: program memory (Flash) and data memory (SRAM) are separate. EEPROM is another separate non-volatile storage area. On memory-constrained AVR projects, prefer static buffers where appropriate and leave enough SRAM margin for call depth and interrupt usage; heap fragmentation and a stack/heap collision are serious risks.
+    </div>
+
+    <div class="section-head"><i class="fas fa-magnifying-glass-chart"></i> Inspect Your Build</div>
+    <div class="code-block">
+<span class="cm"># Section sizes / memory use</span>
+avr-size -C --mcu=atmega32 firmware.elf
+
+<span class="cm"># ELF section headers</span>
+avr-objdump -h firmware.elf
+
+<span class="cm"># Largest symbols first</span>
+avr-nm --size-sort -S firmware.elf
+    </div>
+  </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
+  <div class="page-number">16</div>
+</section>
+
+<!-- PAGE 17: POINTER FUNDAMENTALS -->
+<section id="page17" class="page page-light">
   <div class="page-inner">
     <div class="page-title"><span class="red">Pointer</span> Fundamentals</div>
     <div class="page-subtitle">addresses &middot; dereferencing &middot; pointer types &middot; null</div>
@@ -2088,10 +2264,10 @@ v.value.fval = <span class="num">3.14f</span>;
     </div>
   </div>
   <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
-  <div class="page-number">16</div>
+  <div class="page-number">17</div>
 </section>
-<!-- PAGE 17: POINTER SAFETY -->
-<section id="page17" class="page page-dark">
+<!-- PAGE 18: POINTER SAFETY -->
+<section id="page18" class="page page-dark">
   <div class="page-inner">
     <div class="page-title"><span class="gold">Pointer</span> Safety</div>
     <div class="page-subtitle">null &middot; wild &middot; dangling &middot; array safety</div>
@@ -2172,10 +2348,10 @@ ptr++;
     </div>
   </div>
   <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
-  <div class="page-number">17</div>
+  <div class="page-number">18</div>
 </section>
-<!-- PAGE 18: MEMORY MANAGEMENT -->
-<section id="page18" class="page page-light">
+<!-- PAGE 19: MEMORY MANAGEMENT -->
+<section id="page19" class="page page-light">
   <div class="page-inner">
     <div class="page-title"><span class="red">Memory</span> Management</div>
     <div class="page-subtitle">heap &middot; malloc &middot; calloc &middot; realloc &middot; free</div>
@@ -2279,10 +2455,10 @@ zeros = <span class="pp">NULL</span>;
     </div>
   </div>
   <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
-  <div class="page-number">18</div>
+  <div class="page-number">19</div>
 </section>
-<!-- PAGE 19: ADVANCED POINTERS -->
-<section id="page19" class="page page-light">
+<!-- PAGE 20: ADVANCED POINTERS -->
+<section id="page20" class="page page-light">
   <div class="page-inner">
     <div class="page-title"><span class="red">Advanced</span> Pointers</div>
     <div class="page-subtitle">structs &middot; unions &middot; arrays &middot; functions &middot; callbacks</div>
@@ -2422,10 +2598,10 @@ device_ptr<span class="op">-&gt;</span>start();
     </div>
   </div>
   <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
-  <div class="page-number">19</div>
+  <div class="page-number">20</div>
 </section>
-<!-- PAGE 20: FILE HANDLING -->
-<section id="page20" class="page page-light">
+<!-- PAGE 21: FILE HANDLING -->
+<section id="page21" class="page page-light">
   <div class="page-inner">
     <div class="page-title"><span class="red">File</span> Handling</div>
     <div class="page-subtitle">open &middot; read &middot; write &middot; position &middot; close</div>
@@ -2541,10 +2717,10 @@ file = <span class="kw">NULL</span>;
     </div>
   </div>
   <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
-  <div class="page-number">20</div>
+  <div class="page-number">21</div>
 </section>
-<!-- PAGE 21: FILE HANDLING II -->
-<section id="page21" class="page page-dark">
+<!-- PAGE 22: FILE HANDLING II -->
+<section id="page22" class="page page-dark">
   <div class="page-inner">
     <div class="page-title"><span class="gold">File</span> Handling II</div>
     <div class="page-subtitle">binary data &middot; positioning &middot; errors &middot; file operations</div>
@@ -2643,10 +2819,10 @@ file = <span class="kw">NULL</span>;
     </div>
   </div>
   <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
-  <div class="page-number">21</div>
+  <div class="page-number">22</div>
 </section>
-<!-- PAGE 22: DEBUGGING & LOGGING -->
-<section id="page22" class="page page-light">
+<!-- PAGE 23: DEBUGGING & LOGGING -->
+<section id="page23" class="page page-light">
   <div class="page-inner">
     <div class="page-title"><span class="red">Debugging</span> &amp; Logging</div>
     <div class="page-subtitle">source locations &middot; trace output &middot; assertions &middot; diagnostics</div>
@@ -2759,10 +2935,10 @@ file = <span class="kw">NULL</span>;
     </div>
   </div>
   <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
-  <div class="page-number">22</div>
+  <div class="page-number">23</div>
 </section>
-<!-- PAGE 23: DEBUG TOOLS & WORKFLOW -->
-<section id="page23" class="page page-dark">
+<!-- PAGE 24: DEBUG TOOLS & WORKFLOW -->
+<section id="page24" class="page page-dark">
   <div class="page-inner">
     <div class="page-title"><span class="gold">Debug</span> Tools</div>
     <div class="page-subtitle">warnings &middot; sanitizers &middot; gdb &middot; reproducible failures</div>
@@ -2834,10 +3010,10 @@ gcc -std=c11 -g3 -O1 -fno-omit-frame-pointer \
     </div>
   </div>
   <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
-  <div class="page-number">23</div>
+  <div class="page-number">24</div>
 </section>
-<!-- PAGE 24: QUICK REFERENCE / CHEAT SHEET -->
-<section id="page24" class="page page-red">
+<!-- PAGE 25: QUICK REFERENCE / CHEAT SHEET -->
+<section id="page25" class="page page-red">
   <div class="page-inner">
     <div class="page-title" style="font-size:clamp(28px,5vw,48px);"><span class="gold">Quick</span> Reference</div>
     <div class="page-subtitle">everything at a glance</div>
@@ -2963,14 +3139,14 @@ p = <span class="fn">malloc</span>(<span class="num">200</span>); <span class="c
       <div style="font-family:'Oswald',sans-serif;font-size:24px;color:var(--gold);letter-spacing:4px;text-transform:uppercase;">End of Cheat Sheet</div>
       <div style="font-size:12px;color:var(--white-dim);margin-top:10px;letter-spacing:2px;">AMIT Learning — C Programming Complete Reference Booklet</div>
       <div style="margin-top:16px;display:flex;justify-content:center;gap:16px;">
-        <span class="badge badge-gold">25 Pages</span>
-        <span class="badge badge-gold">24 Topics</span>
+        <span class="badge badge-gold">26 Pages</span>
+        <span class="badge badge-gold">25 Topics</span>
         <span class="badge badge-gold">1 Language</span>
       </div>
     </div>
   </div>
   <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
-  <div class="page-number">24</div>
+  <div class="page-number">25</div>
 </section>
 <script>
   // Active nav link highlighting on scroll
