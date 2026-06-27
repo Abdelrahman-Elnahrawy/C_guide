@@ -645,6 +645,41 @@
     margin-right: 0;
   }
 
+
+
+  /* Copyright footer */
+  .copyright-footer {
+    position: absolute;
+    bottom: 16px;
+    left: 24px;
+    max-width: calc(100% - 110px);
+    font-family: 'Fira Code', monospace;
+    font-size: 9px;
+    line-height: 1.35;
+    letter-spacing: 0.7px;
+    color: var(--gold-dim);
+    opacity: 0.78;
+    text-transform: uppercase;
+  }
+  .page-light .copyright-footer {
+    color: var(--red-dark);
+    opacity: 0.72;
+  }
+  @media (max-width: 768px) {
+    .copyright-footer {
+      font-size: 8px;
+      max-width: calc(100% - 75px);
+    }
+  }
+  @media print {
+    .copyright-footer {
+      position: absolute;
+      bottom: 12px;
+      left: 20px;
+      font-size: 7px;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -706,7 +741,7 @@
     <div class="cover-line" style="margin:30px auto;"></div>
     <div class="cover-desc" style="margin:0 auto;text-align:center;">
       The Complete Cheat Sheet Booklet<br>
-      Every keyword, every syntax, every rule — condensed into one reference.<br><br>
+      Every keyword, every syntax, every rule — condensed into one reference.<br><br><span style="font-size:10px;color:var(--white-dim);">© 2026 AMIT Learning · All Rights Reserved · Made by Abdelrahman Selim</span><br><br>
       <span style="color:var(--gold);">24 Topics &middot; 25 Pages &middot; 1 Language</span>
     </div>
   </div>
@@ -720,6 +755,7 @@
   <div class="corner-deco tr"></div>
   <div class="corner-deco bl"></div>
   <div class="corner-deco br"></div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">i</div>
 </section>
 <!-- PAGE 1: PROGRAM BASICS -->
@@ -770,6 +806,7 @@ gcc -std=c11 -Wall -Wextra hello.c -o hello
       Start by reading compiler messages from top to bottom. The first error is often the root cause; later errors may only be consequences of it.
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">1</div>
 </section>
 
@@ -827,6 +864,7 @@ gcc -std=c11 -Wall -Wextra hello.c -o hello
       </div>
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">2</div>
 </section>
 <!-- PAGE 3: DATA TYPES -->
@@ -870,6 +908,7 @@ gcc -std=c11 -Wall -Wextra hello.c -o hello
 <span class="fn">printf</span>(<span class="str">"long double: %zu bytes\n"</span>, <span class="kw">sizeof</span>(<span class="type">long double</span>));
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">3</div>
 </section>
 <!-- PAGE 4: TYPE MODIFIERS -->
@@ -922,6 +961,7 @@ gcc -std=c11 -Wall -Wextra hello.c -o hello
       Be careful when mixing <code>signed</code> and <code>unsigned</code> values in the same expression. C applies the usual arithmetic conversions, and the result may not be what beginners expect.
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">4</div>
 </section>
 <!-- PAGE 5: VARIABLES -->
@@ -1005,6 +1045,7 @@ gcc -std=c11 -Wall -Wextra hello.c -o hello
 }
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">5</div>
 </section>
 <!-- PAGE 6: OPERATORS -->
@@ -1121,6 +1162,7 @@ ptr<span class="op">-></span><span class="fn">member</span> <span class="cm">// 
       <tr><td>15 (lowest)</td><td><code>,</code></td><td>Left to right</td></tr>
     </table>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">6</div>
 </section>
 <!-- PAGE 7: FORMATTED I/O -->
@@ -1224,6 +1266,7 @@ ptr<span class="op">-></span><span class="fn">member</span> <span class="cm">// 
       In <code>scanf</code>, always limit input width for <code>%s</code> and scansets like <code>%[...]</code>. Also remember that whitespace in the format string usually skips whitespace in input.
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">7</div>
 </section>
 <!-- PAGE 8: CASTING & BRANCHING -->
@@ -1305,6 +1348,7 @@ ptr<span class="op">-></span><span class="fn">member</span> <span class="cm">// 
       <code>switch</code> only works with integral types (<ic>int</ic>, <ic>char</ic>, <ic>enum</ic>). Case labels must be constant expressions. Always handle <code>default</code>.
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">8</div>
 </section>
 <!-- PAGE 9: LOOPS -->
@@ -1390,6 +1434,7 @@ cleanup:
       Prefer for loops when the iteration count is known. Prefer while when it's driven by a condition. Use do-while when the body must run at least once.
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">9</div>
 </section>
 <!-- PAGE 10: ARRAYS & STRINGS -->
@@ -1461,6 +1506,7 @@ sa[<span class="num">0</span>] = <span class="str">'J'</span>;                 <
       <code>strcpy</code> and <code>strcat</code> do not know the destination capacity. <code>strncpy</code> and <code>strncat</code> are not automatically safe either: they can truncate without the behavior beginners expect and still require capacity calculations. Prefer <code>snprintf</code> for formatted construction, <code>fgets</code> for line input, and explicit length checks.
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">10</div>
 </section>
 <!-- PAGE 11: FUNCTIONS -->
@@ -1556,6 +1602,7 @@ sa[<span class="num">0</span>] = <span class="str">'J'</span>;                 <
 }
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">11</div>
 </section>
 <!-- PAGE 12: RECURSION -->
@@ -1662,6 +1709,7 @@ sa[<span class="num">0</span>] = <span class="str">'J'</span>;                 <
 <span class="cm">// (tail call optimization — not guaranteed in C standard)</span>
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">12</div>
 </section>
 <!-- PAGE 13: STRUCTS -->
@@ -1767,6 +1815,7 @@ s.age = <span class="num">22</span>;
       Structs are passed by value by default, which creates a full copy. Once pointers are introduced, you can pass a pointer to avoid that copy; use a <ic>const</ic> pointer when the function should only read the struct.
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">13</div>
 </section>
 <!-- PAGE 14: ENUMS & UNIONS -->
@@ -1881,6 +1930,7 @@ v.value.fval = <span class="num">3.14f</span>;
       </div>
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">14</div>
 </section>
 <!-- PAGE 15: PREPROCESSOR & MACROS -->
@@ -1966,6 +2016,7 @@ v.value.fval = <span class="num">3.14f</span>;
       <tr><td><code>__STDC_VERSION__</code></td><td>C standard version (e.g., 201112L for C11)</td></tr>
     </table>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">15</div>
 </section>
 <!-- PAGE 16: POINTER FUNDAMENTALS -->
@@ -2036,6 +2087,7 @@ v.value.fval = <span class="num">3.14f</span>;
       Read complex declarations from the variable name outward. For example, <code>int *p</code> means “p is a pointer to int,” while <code>int (*p)[5]</code> means “p is a pointer to an array of 5 ints.”
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">16</div>
 </section>
 <!-- PAGE 17: POINTER SAFETY -->
@@ -2119,6 +2171,7 @@ ptr++;
 }
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">17</div>
 </section>
 <!-- PAGE 18: MEMORY MANAGEMENT -->
@@ -2225,6 +2278,7 @@ zeros = <span class="pp">NULL</span>;
 <span class="cm">// free(scores);</span>
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">18</div>
 </section>
 <!-- PAGE 19: ADVANCED POINTERS -->
@@ -2367,6 +2421,7 @@ device_ptr<span class="op">-&gt;</span>start();
       Function pointers are commonly used for callbacks, menus, drivers, event handlers, and hardware abstraction layers. Call a function through a pointer only when the pointed-to function has a compatible signature.
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">19</div>
 </section>
 <!-- PAGE 20: FILE HANDLING -->
@@ -2485,6 +2540,7 @@ file = <span class="kw">NULL</span>;
       This section assumes hosted/desktop C with a file system. Bare-metal AVR programs usually use UART, EEPROM, flash, SD-card libraries, or host-side tools instead of standard disk files.
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">20</div>
 </section>
 <!-- PAGE 21: FILE HANDLING II -->
@@ -2586,6 +2642,7 @@ file = <span class="kw">NULL</span>;
       Always close every file you successfully open. A missing <code>fclose</code> can lose buffered output, leak operating-system handles, and lock files on some systems.
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">21</div>
 </section>
 <!-- PAGE 22: DEBUGGING & LOGGING -->
@@ -2701,6 +2758,7 @@ file = <span class="kw">NULL</span>;
       Use <code>assert</code> for programmer assumptions that should never be false, not for recoverable user-input or runtime failures. Never log passwords, tokens, private data, or sensitive memory contents.
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">22</div>
 </section>
 <!-- PAGE 23: DEBUG TOOLS & WORKFLOW -->
@@ -2775,6 +2833,7 @@ gcc -std=c11 -g3 -O1 -fno-omit-frame-pointer \
       Avoid relying on a debug print that changes timing or memory layout to “fix” the bug. Heisenbugs often need a breakpoint, watchpoint, trace buffer, or sanitizer instead of extra output.
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">23</div>
 </section>
 <!-- PAGE 24: QUICK REFERENCE / CHEAT SHEET -->
@@ -2910,6 +2969,7 @@ p = <span class="fn">malloc</span>(<span class="num">200</span>); <span class="c
       </div>
     </div>
   </div>
+  <div class="copyright-footer">© 2026 AMIT Learning. All Rights Reserved. Made by Abdelrahman Selim.</div>
   <div class="page-number">24</div>
 </section>
 <script>
@@ -2950,7 +3010,4 @@ p = <span class="fn">malloc</span>(<span class="num">200</span>); <span class="c
 </script>
 
 </body>
-<footer>
-    <p>&copy; 2026 Abdelrahman Selim. All Rights Reserved. Prepared for Amit-Learning.</p>
-</footer>
 </html>
